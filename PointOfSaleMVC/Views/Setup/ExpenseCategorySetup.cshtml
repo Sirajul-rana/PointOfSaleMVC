@@ -1,0 +1,126 @@
+﻿@using PointOfSaleMVC.Models
+@model PointOfSaleMVC.Models.ExpenseCategory
+
+@{
+    ViewBag.Title = "Expense Category Setup";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Expense Category Setup</h2>
+<hr class="my-4">
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "saveExpenseForm", name = "saveExpenseForm" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+
+        <div class="row">
+            <div class="col-md"></div>
+            <div class="col-md">
+                <div style="width: 400%;">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <input type="radio" id="rootExpenseCategory" name="CategorySelect" value="Root Category" checked="checked" />
+                                <label for="rootExpenseCategory">Root Category</label>
+                            </div>
+                            <div class="col-md-2">
+                                <input type="radio" id="childExpenseCategory" name="CategorySelect" value="Child Category" />
+                                <label for="childExpenseCategory">Child Category</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.RootExpenseCategoryId, new { @class = "control-label col-md-2", @for = "RootCategoryId" })
+                        <div class="col-md-3">
+                            @Html.DropDownListFor(model => model.RootExpenseCategoryId, new SelectList(Enumerable.Empty<SelectListItem>(), "ExpenseCategoryId", "ExpenseName"), "Select Category", new { @class = "form-control", @disabled = "disabled" })
+                            @Html.ValidationMessageFor(model => model.RootExpenseCategoryId)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ExpenseName, new { @class = "control-label col-md-2", @for = "Name" })
+                        <div class="col-md-3">
+                            @Html.TextBoxFor(model => model.ExpenseName, null, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.ExpenseName)
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ExpenseCode, new { @class = "control-label col-md-2", @for = "Code" })
+                        <div class="col-md-3">
+                            @Html.TextBoxFor(model => model.ExpenseCode, null, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.ExpenseCode)
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ExpenseDescription, new { @class = "control-label col-md-2", @for = "Description" })
+                        <div class="col-md-3">
+                            @Html.TextAreaFor(model => model.ExpenseDescription, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.ExpenseDescription)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="button" id="saveExpenseButton" name="saveExpenseButton" value="Save" class="btn btn-success" />
+                            <input type="button" id="cancelExpenseButton" name="cancelExpenseButton" value="Cancel" class="btn btn-danger" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md"></div>
+        </div>
+
+    </div>
+
+}
+<table class="table table-bordered table-hover table-striped table-light css-serial">
+    <tr class="thead-dark">
+        <th>
+            SL
+        </th>
+        <th>
+            @Html.DisplayName("Category")
+        </th>
+        <th>
+            @Html.DisplayName("Name")
+        </th>
+        <th>
+            @Html.DisplayName("Code")
+        </th>
+
+        <th>
+            @Html.DisplayName("Description")
+        </th>
+        <th>
+            @Html.DisplayName("Action")
+        </th>
+    </tr>
+
+    <tbody id="categoryTableBody">
+        @*@foreach (var item in (List<ExpenseCategory>)ViewBag.Categories)
+        {
+            <tr>
+                <td></td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RootExpenseCategory.ExpenseName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ExpenseName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ExpenseCode)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ExpenseDescription)
+                </td>
+
+                <td>
+                    <button type="button" id="btnEdit" class="btn btn-primary btnEdit"><i class="fa fa-edit"></i></button>
+                    <button type="button" class="btn btn-danger btnDelete" id="btnDelete"><i class="fa fa-remove"></i></button>
+                </td>
+            </tr>
+        }*@
+    </tbody>
+</table>
+

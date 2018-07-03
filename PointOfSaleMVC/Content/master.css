@@ -1,0 +1,73 @@
+﻿body {
+    padding-top: 90px;
+    position: relative;
+}
+
+hr {
+    border-color: white;
+}
+
+.form-control {
+    color: black;
+}
+
+.navbar-inverse {
+    background-color: #2C3E50;
+    border-color: #2C3E50;
+}
+
+.my-4 {
+    border-top: 2px solid #2c3e50;
+}
+
+@media screen and (max-width: 768px) {
+    .navbar-collapse {
+        border-top: 1px solid transparent;
+    }
+
+    .side-collapse-container {
+        width: 100%;
+        position: relative;
+        left: 0;
+        transition: left .3s;
+    }
+
+        .side-collapse-container.out {
+            left: 150px;
+        }
+
+    .side-collapse {
+        border-top: 1px solid black;
+        top: 70px;
+        bottom: 0;
+        left: 0;
+        width: 150px;
+        position: fixed;
+        overflow: hidden;
+        transition: width .4s;
+    }
+
+        .side-collapse.in {
+            width: 0;
+        }
+
+    .navbar-collapse {
+        margin-left: 20px;
+    }
+
+    .dropdown-menu {
+        width: 150px;
+    }
+}
+
+#btnDelete {
+    margin-left: 15px;
+}
+
+.css-serial {
+    counter-reset: serial-number; /* Set the serial number counter to 0 */
+}
+.css-serial td:first-child:before {
+    counter-increment: serial-number; /* Increment the serial number counter */
+    content: counter(serial-number); /* Display the counter */
+}

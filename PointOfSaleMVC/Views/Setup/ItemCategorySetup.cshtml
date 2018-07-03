@@ -1,0 +1,145 @@
+﻿@using PointOfSaleMVC.Models
+@model PointOfSaleMVC.Models.Category
+@{
+    ViewBag.Title = "Item Category Setup";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>Item Category Setup</h3>
+<hr class="my-4">
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "saveCategoryForm", name = "saveCategoryForm" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        
+        <div class="row">
+            <div class="col-md"></div>
+            <div class="col-md">
+                <div style="width: 400%;">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <input type="radio" id="rootCategory" name="CategorySelect" value="Root Category" checked="checked"/>
+                            <label for="rootCategory">Root Category</label>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="radio" id="childCategory" name="CategorySelect" value="Child Category"/>
+                            <label for="childCategory">Child Category</label>
+                        </div>
+                        @*@Html.RadioButton("CategorySelect", "Root Category", new { @class = "form-control" }) @Html.Label("Root Category", new { @class = "control-label", @for = "CategorySelect" })
+                                @Html.RadioButton("CategorySelect", new { @class = "form-control" }) @Html.Label("Child Category", new { @class = "control-label" })
+                                @Html.ValidationMessage("CategorySelect")*@
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.RootCategoryId, new {@class = "control-label col-md-2", @for = "RootCategoryId" })
+                    <div class="col-md-3">
+                        @Html.DropDownListFor(model => model.RootCategoryId, new SelectList(Enumerable.Empty<SelectListItem>(), "CategoryId", "CategoryName"), "Select Category", new {@class = "form-control", @disabled = "disabled"})
+                        @Html.ValidationMessageFor(model => model.RootCategoryId)
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.CategoryName, new {@class = "control-label col-md-2", @for = "Name"})
+                    <div class="col-md-3">
+                        @Html.TextBoxFor(model => model.CategoryName, null, new {@class = "form-control"})
+                        @Html.ValidationMessageFor(model => model.CategoryName)
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.CategoryCode, new {@class = "control-label col-md-2", @for = "Code"})
+                    <div class="col-md-3">
+                        @Html.TextBoxFor(model => model.CategoryCode, null, new {@class = "form-control"})
+                        @Html.ValidationMessageFor(model => model.CategoryCode)
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.CategoryDescription, new {@class = "control-label col-md-2", @for = "Description"})
+                    <div class="col-md-3">
+                        @Html.TextAreaFor(model => model.CategoryDescription, new {@class = "form-control"})
+                        @Html.ValidationMessageFor(model => model.CategoryDescription)
+                    </div>
+                </div>
+
+
+                @*<div class="form-group">
+                            @Html.Label("Image", new { @class = "control-label col-md-2", @for = "CategoryImage" })
+                            <div class="col-md-3">
+                                <input type="file" id="CategoryImage" onchange="readURL(this);" value="Open" name="CategoryImage" class="form-control-file"/>
+                                <img id="preview" src="~/ProjectImage/default_image.jpg" style="width:250px;height:200px;padding-top:5px"/>
+                                @Html.ValidationMessage("CategoryImage")
+                            </div>
+                        </div>*@
+
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="button" id="saveCategoryButton" name="saveCategoryButton" value="Save" class="btn btn-success"/>
+                        <input type="button" id="cancelCategoryButton" name="cancelCategoryButton" value="Cancel" class="btn btn-danger"/>
+                    </div>
+                </div>
+            </div>
+            </div>
+            <div class="col-md"></div>
+        </div>
+
+    </div>
+
+}
+<table class="table table-bordered table-hover table-striped table-light css-serial">
+    <tr class="thead-dark">
+        <th>
+            SL
+        </th>
+        <th>
+            @Html.DisplayName("Category Type")
+        </th>
+        <th>
+            @Html.DisplayName("Category")
+        </th>
+        <th>
+            @Html.DisplayName("Name")
+        </th>
+        <th>
+            @Html.DisplayName("Code")
+        </th>
+
+        <th>
+            @Html.DisplayName("Description")
+        </th>
+        <th>
+            @Html.DisplayName("Action")
+        </th>
+    </tr>
+
+    <tbody id="categoryTableBody">
+    @foreach (var item in (List<Category>)ViewBag.Categories)
+    {
+        <tr>
+            <td></td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CategoryType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RootCategory.CategoryName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CategoryName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CategoryCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CategoryDescription)
+            </td>
+
+            <td>
+                <button type="button" id="btnEdit" class="btn btn-primary btnEdit"><i class="fa fa-edit"></i></button>
+                <button type="button" class="btn btn-danger btnDelete" id="btnDelete"><i class="fa fa-remove"></i></button>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
