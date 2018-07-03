@@ -10,34 +10,33 @@ namespace PointOfSaleMVC.Controllers
 {
     public class SetupController : Controller
     {
-        CategoryManager manager = new CategoryManager();
-        ItemManager itemManager = new ItemManager();
+        SetupManager setupManager = new SetupManager();
         // GET: Setup
         /*
          * Category Setup code starts here
          */
         public ActionResult ItemCategorySetup()
         {
-            ViewBag.Categories = manager.GetAllCategories();
+            ViewBag.Categories = setupManager.GetAllCategories();
             return View();
         }
 
         [HttpPost]
         public ActionResult SaveCategory(Category category)
         {
-            string msg = manager.SaveCategory(category);
+            string msg = setupManager.SaveCategory(category);
             return Json(msg, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult GetParentCategories()
         {
-            SelectList categories = new SelectList(manager.GetParentCategories(), "CategoryId", "CategoryName", 0);
+            SelectList categories = new SelectList(setupManager.GetParentCategories(), "CategoryId", "CategoryName", 0);
             return Json(categories, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult GetAllCategories()
         {
-            List<Category> categories = manager.GetAllCategories();
+            List<Category> categories = setupManager.GetAllCategories();
             return Json(categories, JsonRequestBehavior.AllowGet);
         }
         /*
@@ -50,21 +49,21 @@ namespace PointOfSaleMVC.Controllers
         [HttpGet]
         public ActionResult ItemSetup()
         {
-            ViewBag.AllCategories = new SelectList(manager.GetChildCategories(), "CategoryId", "CategoryName", 0);
-            ViewBag.Items = itemManager.GetAllItems();
+            ViewBag.AllCategories = new SelectList(setupManager.GetChildCategories(), "CategoryId", "CategoryName", 0);
+            ViewBag.Items = setupManager.GetAllItems();
             return View();
         }
 
         [HttpPost]
         public ActionResult ItemSetup(Item item)
         {
-            string msg = itemManager.SaveItem(item);
+            string msg = setupManager.SaveItem(item);
             return Json(msg, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult GetAllItems()
         {
-            List<Item> items= itemManager.GetAllItems();
+            List<Item> items= setupManager.GetAllItems();
             return Json(items, JsonRequestBehavior.AllowGet);
         }
 
@@ -80,5 +79,14 @@ namespace PointOfSaleMVC.Controllers
         {
             return View();
         }
+
+        public ActionResult GetParentExpenseCategories()
+        {
+            //SelectList categories = new SelectList(setupManager.GetParentExpenseCategories(), "CategoryId", "CategoryName", 0);
+            //return Json(categories, JsonRequestBehavior.AllowGet);
+        }
+        /*
+         * Expense category setup code ends here
+         */
     }
 }

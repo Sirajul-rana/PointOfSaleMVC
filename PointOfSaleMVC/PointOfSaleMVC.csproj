@@ -154,14 +154,12 @@
     <Compile Include="Controllers\OperationController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\SetupController.cs" />
-    <Compile Include="DBL\CategoryGateway.cs" />
     <Compile Include="DBL\Gateway.cs" />
-    <Compile Include="DBL\ItemGateway.cs" />
+    <Compile Include="DBL\SetupGateway.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Manager\CategoryManager.cs" />
-    <Compile Include="Manager\ItemManager.cs" />
+    <Compile Include="Manager\SetupManager.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\ExpenseCategory.cs" />
     <Compile Include="Models\Item.cs" />

@@ -328,6 +328,16 @@
     /*
      * Expense Setup page code starts here
      */
+    function getExpenseCategory() {
+        $.get("/Setup/GetParentExpenseCategories/", function (data) {
+            var markup = "<option value=''>Select Category</option>";
+            for (var x = 0; x < data.length; x++) {
+                markup += "<option value=" + data[x].Value + ">" + data[x].Text + "</option>";
+            }
+            $("#RootExpenseCategoryId").html(markup).show();
+
+        });
+    }
     $("#childExpenseCategory").change(function () {
         $("#RootExpenseCategoryId").removeAttr("disabled");
         $("#ExpenseName").val("");
@@ -335,6 +345,7 @@
         $("#ExpenseDescription").val("");
         $('#rootExpenseCategory').attr('checked', false);
         $('#childExpenseCategory').attr('checked', true);
+        getExpenseCategory();
     });
 
     $("#rootExpenseCategory").change(function () {
