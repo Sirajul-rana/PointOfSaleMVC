@@ -338,6 +338,10 @@
 
         });
     }
+    $("#ExpenseName").change(function () {
+        var code = ($("#ExpenseName").val()).slice(0, 3);
+        $("#ExpenseCode").val(code.toLocaleUpperCase());
+    });
     $("#childExpenseCategory").change(function () {
         $("#RootExpenseCategoryId").removeAttr("disabled");
         $("#ExpenseName").val("");
@@ -358,6 +362,102 @@
         $("#RootExpenseCategoryId").prop("disabled", "disabled");
     });
 
+    $("#saveExpenseForm").validate({
+        rules: {
+            RootExpenseCategoryId: {
+                required: true
+            },
+            ExpenseName: {
+                required: true
+            },
+            ExpenseCode: {
+                required: true
+            },
+            ExpenseDescription: {
+                required: true
+            }
+        },
+        messages: {
+            RootExpenseCategoryId: {
+                required: "Please select an option"
+            },
+            ExpenseName: {
+                required: "Please enter expanse category name"
+            },
+            ExpenseCode: {
+                required: "Please enter expense category code"
+            },
+            ExpenseDescription: {
+                required: "Please enter expense category description"
+            }
+        }
+    });
+
+
+    $("#saveExpenseButton").click(function () {
+        if ($("#saveExpenseForm").valid()) {
+            var expenseName = $("#ExpenseName").val();
+            var expenseCode = $("#ExpenseCode").val();
+            var expenseDescription = $("#ExpenseDescription").val();
+            var rootExpenseCategoryId = $("#RootExpenseCategoryId").val();
+
+            if ($("#rootCategory").attr("checked") === "checked") {
+                $.post("/Setup/SaveExpenseCategory/",
+                    {
+                        ExpenseName: expenseName,
+                        ExpenseCode: expenseCode,
+                        ExpenseDescription: expenseDescription
+                    },
+                    function (data, status) {
+                        if (status === "success") {
+                            $("#rootExpenseCategory").prop("checked", "checked");
+                            $("#RootExpenseCategoryId").prop("disabled", "disabled");
+                            $("#RootExpenseCategoryId").find('option:not(:first)').remove();
+                            $("#ExpenseName").val("");
+                            $("#ExpenseCode").val("");
+                            $("#ExpenseDescription").val("");
+                            $('#rootExpenseCategory').attr('checked', true);
+                            $('#childExpenseCategory').attr('checked', false);
+                            loadCategoryTable();
+                            alertify.success("Data: " + data + "\nStatus: " + status);
+                        } else {
+                            loadCategoryTable();
+                            alertify.error("Data: " + data + "\nStatus: " + status);
+                        }
+
+                    });
+            }
+
+            if ($("#childCategory").attr("checked") === "checked") {
+                $.post("/Setup/SaveExpenseCategory/",
+                    {
+                        RootExpenseCategoryId: rootExpenseCategoryId,
+                        ExpenseName: ExpenseName,
+                        expenseCode: expenseCode,
+                        expenseDescription: expenseDescription
+                    },
+                    function (data, status) {
+                        if (status === "success") {
+                            $("#rootExpenseCategory").prop("checked", "checked");
+                            $("#RootExpenseCategoryId").prop("disabled", "disabled");
+                            $("#RootExpenseCategoryId").find('option:not(:first)').remove();
+                            $("#ExpenseName").val("");
+                            $("#ExpenseCode").val("");
+                            $("#ExpenseDescription").val("");
+                            $('#rootExpenseCategory').attr('checked', true);
+                            $('#childExpenseCategory').attr('checked', false);
+                            loadCategoryTable();
+                            alertify.success("Data: " + data + "\nStatus: " + status);
+                        } else {
+                            loadCategoryTable();
+                            alertify.error("Data: " + data + "\nStatus: " + status);
+                        }
+
+                    });
+            }
+
+        }
+    });
     /*
      * Expense Setup page code ends here
      */

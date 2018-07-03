@@ -79,11 +79,16 @@ namespace PointOfSaleMVC.Controllers
         {
             return View();
         }
-
+        [HttpPost]
+        public ActionResult SaveExpenseCategory(ExpenseCategory expenseCategory)
+        {
+            string msg = setupManager.SaveExpenseCategory(expenseCategory);
+            return Json(msg, JsonRequestBehavior.AllowGet);
+        }
         public ActionResult GetParentExpenseCategories()
         {
-            //SelectList categories = new SelectList(setupManager.GetParentExpenseCategories(), "CategoryId", "CategoryName", 0);
-            //return Json(categories, JsonRequestBehavior.AllowGet);
+            SelectList categories = new SelectList(setupManager.GetParentExpenseCategories(), "CategoryId", "CategoryName", 0);
+            return Json(categories, JsonRequestBehavior.AllowGet);
         }
         /*
          * Expense category setup code ends here

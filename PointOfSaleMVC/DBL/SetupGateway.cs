@@ -28,7 +28,6 @@ namespace PointOfSaleMVC.DBL
                 categories.Add(category);
             }
 
-
             reader.Close();
             gateway.Connection.Close();
             return categories;
@@ -51,13 +50,12 @@ namespace PointOfSaleMVC.DBL
                 categories.Add(category);
             }
 
-
             reader.Close();
             gateway.Connection.Close();
             return categories;
         }
 
-        public string SaveCategory(Category category)
+        public int SaveCategory(Category category)
         {
             string query = "INSERT INTO Category (CategoryName, CategoryCode,CategoryDescription, CategoryType,RootCategoryId)" +
                            " VALUES (@categoryName, @categoryCode,@categoryDescription, @categoryType,@rootCategoryId)";
@@ -68,21 +66,15 @@ namespace PointOfSaleMVC.DBL
             gateway.SqlCommand.Parameters.AddWithValue("@categoryDescription", category.CategoryDescription);
             gateway.SqlCommand.Parameters.AddWithValue("@categoryType", category.CategoryType);
             SqlParameter rootCategoryParam = gateway.SqlCommand.Parameters.AddWithValue("@rootCategoryId", category.RootCategoryId);
+
             if (category.RootCategoryId == null)
             {
                 rootCategoryParam.Value = DBNull.Value;
             }
+
             int rowAffected = gateway.SqlCommand.ExecuteNonQuery();
-            if (rowAffected >= 0)
-            {
-                gateway.Connection.Close();
-                return "Category has been added successfully";
-            }
-            else
-            {
-                gateway.Connection.Close();
-                return "Adding failed";
-            }
+            gateway.Connection.Close();
+            return rowAffected;
         }
 
         public List<Category> GetAllCategories()
@@ -107,7 +99,6 @@ namespace PointOfSaleMVC.DBL
                 categories.Add(category);
             }
 
-
             reader.Close();
             gateway.Connection.Close();
             return categories;
@@ -119,7 +110,7 @@ namespace PointOfSaleMVC.DBL
         /*
          * Item setup code starts here
          */
-        public string SaveItem(Item item)
+        public int SaveItem(Item item)
         {
             string query = "INSERT INTO Item (ItemName, ItemCode,ItemDescription, CostPrice, SalePrice, CategoryId)" +
                            " VALUES (@itemName, @itemCode,@itemDescription, @costPrice,@salePrice,@categoryId)";
@@ -131,17 +122,11 @@ namespace PointOfSaleMVC.DBL
             gateway.SqlCommand.Parameters.AddWithValue("@costPrice", item.CostPrice);
             gateway.SqlCommand.Parameters.AddWithValue("@salePrice", item.SalePrice);
             gateway.SqlCommand.Parameters.AddWithValue("@categoryId", item.CategoryId);
+
             int rowAffected = gateway.SqlCommand.ExecuteNonQuery();
-            if (rowAffected >= 0)
-            {
-                gateway.Connection.Close();
-                return "Item has been added successfully";
-            }
-            else
-            {
-                gateway.Connection.Close();
-                return "Adding failed";
-            }
+
+            gateway.Connection.Close();
+            return rowAffected;
         }
 
         public List<Item> GetAllItems()
@@ -152,6 +137,7 @@ namespace PointOfSaleMVC.DBL
                 "INNER JOIN Category C ON C.CategoryId = I.CategoryId";
             Gateway gateway = new Gateway(query);
             SqlDataReader reader = gateway.SqlCommand.ExecuteReader();
+
             while (reader.Read())
             {
                 Item item = new Item();
@@ -165,6 +151,7 @@ namespace PointOfSaleMVC.DBL
                 item.Category = category;
                 items.Add(item);
             }
+
             reader.Close();
             gateway.Connection.Close();
             return items;
@@ -176,10 +163,52 @@ namespace PointOfSaleMVC.DBL
         /*
          * Expense category setup code starts here
          */
+        public List<ExpenseCategory> GetParentExpenseCategories()
+        {
+            List<ExpenseCategory> expenseCategories = new List<ExpenseCategory>();
+            string query = "Select Ex.ExpenseCategoryId,Ex.ExpenseName from ExpenseCategory Ex where Ex.RootExpenseCategoryId is null";
+            Gateway gateway = new Gateway(query);
+            gateway.SqlCommand.Parameters.Clear();
 
+            SqlDataReader reader = gateway.SqlCommand.ExecuteReader();
+
+            while (reader.Read())
+            {
+                ExpenseCategory expenseCategory = new ExpenseCategory();
+                expenseCategory.ExpenseCategoryId = (int)reader["ExpenseCategoryId"];
+                expenseCategory.ExpenseName = reader["ExpenseName"].ToString();
+                expenseCategories.Add(expenseCategory);
+            }
+
+            reader.Close();
+            gateway.Connection.Close();
+            return expenseCategories;
+        }
+
+        public int SaveExpenseCategory(ExpenseCategory expenseCategory)
+        {
+            string query = "INSERT INTO Category (ExpenseName, ExpenseCode,ExpenseDescription, RootExpenseCategoryId)" +
+                           " VALUES (@expenseName, @expenseCode, @expenseDescription, @rootExpenseCategoryId)";
+            Gateway gateway = new Gateway(query);
+            gateway.SqlCommand.Parameters.Clear();
+            gateway.SqlCommand.Parameters.AddWithValue("@expenseName", expenseCategory.ExpenseName);
+            gateway.SqlCommand.Parameters.AddWithValue("@expenseCode", expenseCategory.ExpenseCode);
+            gateway.SqlCommand.Parameters.AddWithValue("@expenseDescription", expenseCategory.ExpenseDescription);
+            SqlParameter rootCategoryParam = gateway.SqlCommand.Parameters.AddWithValue("@rootExpenseCategoryId", expenseCategory.RootExpenseCategoryId);
+            if (expenseCategory.RootExpenseCategoryId == null)
+            {
+                rootCategoryParam.Value = DBNull.Value;
+            }
+
+            int rowAffected = gateway.SqlCommand.ExecuteNonQuery();
+
+            gateway.Connection.Close();
+            return rowAffected;
+        }
         /*
          * Expense category setup code ends here
          */
+
 
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -21,7 +22,14 @@ namespace PointOfSaleMVC.Manager
 
         public string SaveCategory(Category category)
         {
-            return setupGateway.SaveCategory(category);
+            if (setupGateway.SaveCategory(category) >= 0)
+            {
+                return "Category has been added successfully";
+            }
+            else
+            {
+                return "Adding failed";
+            }
         }
 
         public List<Category> GetAllCategories()
@@ -44,7 +52,14 @@ namespace PointOfSaleMVC.Manager
         
         public string SaveItem(Item item)
         {
-            return setupGateway.SaveItem(item);
+            if (setupGateway.SaveItem(item) >= 0)
+            {
+                return "Item has been added successfully";
+            }
+            else
+            {
+                return "Adding failed";
+            }
         }
 
         public List<Item> GetAllItems()
@@ -62,5 +77,21 @@ namespace PointOfSaleMVC.Manager
         /*
          * Expense category setup code ends here
          */
+        public List<ExpenseCategory> GetParentExpenseCategories()
+        {
+            return setupGateway.GetParentExpenseCategories();
+        }
+
+        public string SaveExpenseCategory(ExpenseCategory expenseCategory)
+        {
+            if (setupGateway.SaveExpenseCategory(expenseCategory) >= 0)
+            {
+                return "Expense category has been added successfully";
+            }
+            else
+            {
+                return "Adding failed";
+            }
+        }
     }
 }
