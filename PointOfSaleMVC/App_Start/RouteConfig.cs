@@ -16,7 +16,7 @@ namespace PointOfSaleMVC
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Setup", action = "ExpenseCategorySetup", id = UrlParameter.Optional }
+                defaults: new { controller = "Setup", action = "OrganizationSetup", id = UrlParameter.Optional }
             );
         }
     }

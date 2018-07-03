@@ -209,6 +209,58 @@ namespace PointOfSaleMVC.DBL
          * Expense category setup code ends here
          */
 
+        /*
+         * Organization setup code starts here
+         */
+        public int SaveOrganization(Organization organization)
+        {
+            string query = "INSERT INTO Organization (OrganizationName, OrganizationCode,OrganizationContactNo, OrganizationAddress)" +
+                           " VALUES (@organizationName, @organizationCode, @organizationContactNo, @organizationAddress)";
+            Gateway gateway = new Gateway(query);
+            gateway.SqlCommand.Parameters.Clear();
+            gateway.SqlCommand.Parameters.AddWithValue("@organizationName", organization.OrganizationName);
+            gateway.SqlCommand.Parameters.AddWithValue("@organizationCode", organization.OrganizationCode);
+            gateway.SqlCommand.Parameters.AddWithValue("@organizationContactNo", organization.OrganizationContactNo);
+            gateway.SqlCommand.Parameters.AddWithValue("@organizationAddress", organization.OrganizationAddress);
+
+            int rowAffected = gateway.SqlCommand.ExecuteNonQuery();
+
+            gateway.Connection.Close();
+            return rowAffected;
+        }
+
+        public List<Organization> GetAllOrganizations()
+        {
+            List<Organization> organizations = new List<Organization>();
+            string query = "SELECT O.OrganizationName, O.OrganizationCode, O.OrganizationContactNo, O.OrganizationAddress FROM Organization O";
+            Gateway gateway = new Gateway(query);
+            SqlDataReader reader = gateway.SqlCommand.ExecuteReader();
+
+            while (reader.Read())
+            {
+                Organization organization = new Organization();
+                organization.OrganizationName = reader["OrganizationName"].ToString();
+                organization.OrganizationCode = reader["OrganizationCode"].ToString();
+                organization.OrganizationContactNo = reader["OrganizationContactNo"].ToString();
+                organization.OrganizationAddress = reader["OrganizationAddress"].ToString();
+                organizations.Add(organization);
+            }
+
+            reader.Close();
+            gateway.Connection.Close();
+            return organizations;
+        }
+        /*
+         * Organization setup code ends here
+         */
+
+        /*
+         * Outlet/ Branch setup code starts here
+         */
+
+        /*
+         * Outlet/ Branch setup code ends here
+         */
 
     }
 }

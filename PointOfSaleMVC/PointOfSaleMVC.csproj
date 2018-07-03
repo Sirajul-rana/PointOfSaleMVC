@@ -163,6 +163,7 @@
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\ExpenseCategory.cs" />
     <Compile Include="Models\Item.cs" />
+    <Compile Include="Models\Organization.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -275,6 +276,7 @@
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\Setup\ItemSetup.cshtml" />
     <Content Include="Views\Setup\ExpenseCategorySetup.cshtml" />
+    <Content Include="Views\Setup\OrganizationSetup.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

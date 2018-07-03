@@ -58,7 +58,7 @@
     }
 
 
-    
+
 
     //$("#tableBody").click(function() {
     //    loadCategoryTable();
@@ -253,7 +253,7 @@
             },
             CostPrice: {
                 required: true,
-                number:true
+                number: true
             },
             SalePrice: {
                 required: true,
@@ -418,17 +418,17 @@
                             $("#ExpenseDescription").val("");
                             $('#rootExpenseCategory').attr('checked', true);
                             $('#childExpenseCategory').attr('checked', false);
-                            loadCategoryTable();
+                            //loadCategoryTable();
                             alertify.success("Data: " + data + "\nStatus: " + status);
                         } else {
-                            loadCategoryTable();
+                            //loadCategoryTable();
                             alertify.error("Data: " + data + "\nStatus: " + status);
                         }
 
                     });
             }
 
-            if ($("#childCategory").attr("checked") === "checked") {
+            if ($("#childExpenseCategory").attr("checked") === "checked") {
                 $.post("/Setup/SaveExpenseCategory/",
                     {
                         RootExpenseCategoryId: rootExpenseCategoryId,
@@ -446,10 +446,10 @@
                             $("#ExpenseDescription").val("");
                             $('#rootExpenseCategory').attr('checked', true);
                             $('#childExpenseCategory').attr('checked', false);
-                            loadCategoryTable();
+                            //loadCategoryTable();
                             alertify.success("Data: " + data + "\nStatus: " + status);
                         } else {
-                            loadCategoryTable();
+                            //loadCategoryTable();
                             alertify.error("Data: " + data + "\nStatus: " + status);
                         }
 
@@ -460,6 +460,98 @@
     });
     /*
      * Expense Setup page code ends here
+     */
+
+    /*
+     * Organization setup code starts here
+     */
+    function loadOrganizationTable() {
+        $.get("/Setup/GetOrganizations/", function (data) {
+            var tblHtml = "";
+            $.each(data, function (i, val) {
+                tblHtml += "<tr><td></td><td>" + val.OrganizationName + "</td>";
+                tblHtml += "<td>" + val.OrganizationCode + "</td>";
+                tblHtml += "<td>" + val.OrganizationContactNo + "</td>";
+                tblHtml += "<td>" + val.OrganizationAddress + "</td>";
+                tblHtml += '<td><button type="button" id="btnEdit" class="btn btn-primary btnEdit"><i class="fa fa-edit"></i></button>';
+                tblHtml += '<button type="button" class="btn btn-danger btnDelete" id="btnDelete"><i class="fa fa-remove"></i></button></td></tr>';
+            });
+
+            $("#organizationTableBody").html(tblHtml);
+        });
+    }
+    $("#saveOrganizationForm").validate({
+        rules: {
+            OrganizationName: {
+                required: true
+            },
+            OrganizationCode: {
+                required: true
+            },
+            OrganizationContactNo: {
+                required: true
+            },
+            OrganizationAddress: {
+                required: true
+            }
+        },
+        messages: {
+            OrganizationName: {
+                required: "Please enter organization name"
+            },
+            OrganizationCode: {
+                required: "Please enter organization code"
+            },
+            OrganizationContactNo: {
+                required: "Please enter organization contact no"
+            },
+            OrganizationAddress: {
+                required: "Please enter organization address"
+            }
+        }
+    });
+
+    $("#saveOrganizationButton").click(function () {
+        if ($("#saveOrganizationForm").valid()) {
+            var organizationName = $("#OrganizationName").val();
+            var organizationCode = $("#OrganizationCode").val();
+            var organizationContactNo = $("#OrganizationContactNo").val();
+            var organizationAddress = $("#OrganizationAddress").val();
+
+            $.post("/Setup/SaveOrganization/",
+                {
+                    OrganizationName: organizationName,
+                    OrganizationCode: organizationCode,
+                    OrganizationContactNo: organizationContactNo,
+                    OrganizationAddress: organizationAddress
+                },
+                function (data, status) {
+                    if (status === "success") {
+                        $("#OrganizationName").val("");
+                        $("#OrganizationCode").val("");
+                        $("#OrganizationContactNo").val("");
+                        $("#OrganizationAddress").val("");
+                        alertify.success("Data: " + data + "\nStatus: " + status);
+                        loadOrganizationTable();
+                    } else {
+                        loadOrganizationTable();
+                        alertify.error("Data: " + data + "\nStatus: " + status);
+                    }
+
+                });
+
+        }
+    });
+
+    $("#cancelOrganizationButton").click(function () {
+        $("#OrganizationName").val("");
+        $("#OrganizationCode").val("");
+        $("#OrganizationContactNo").val("");
+        $("#OrganizationAddress").val("");
+        alertify.error("All Cleared");
+    });
+    /*
+     * Organization setup code ends here
      */
 
 });

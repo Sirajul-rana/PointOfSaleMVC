@@ -49,7 +49,7 @@ namespace PointOfSaleMVC.Manager
         /*
          * Item setup code starts here
          */
-        
+
         public string SaveItem(Item item)
         {
             if (setupGateway.SaveItem(item) >= 0)
@@ -73,10 +73,6 @@ namespace PointOfSaleMVC.Manager
         /*
          * Expense category setup code starts here
          */
-
-        /*
-         * Expense category setup code ends here
-         */
         public List<ExpenseCategory> GetParentExpenseCategories()
         {
             return setupGateway.GetParentExpenseCategories();
@@ -93,5 +89,50 @@ namespace PointOfSaleMVC.Manager
                 return "Adding failed";
             }
         }
+        /*
+         * Expense category setup code ends here
+         */
+
+
+        /*
+         * Organization setup code starts here
+         */
+        public string SaveOrganization(Organization organization)
+        {
+            if (setupGateway.SaveOrganization(organization) >= 0)
+            {
+                return "Organization has been added successfully";
+            }
+            else
+            {
+                return "Adding failed";
+            }
+        }
+
+        public List<Organization> GetAllOrganizations()
+        {
+            return setupGateway.GetAllOrganizations();
+        }
+        /*
+         * Organization setup code ends here
+         */
+
+
+        /*
+         * Outlet/ Branch setup code starts here
+         */
+
+        /*
+         * Outlet/ Branch setup code ends here
+         */
+
+        /*
+         * Organization setup code starts here
+         */
+
+        /*
+         * Organization setup code ends here
+         */
+
     }
 }

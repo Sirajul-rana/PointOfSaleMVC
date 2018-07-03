@@ -93,5 +93,37 @@ namespace PointOfSaleMVC.Controllers
         /*
          * Expense category setup code ends here
          */
+        /*
+         * Organization setup code starts here
+         */
+        [HttpGet]
+        public ActionResult OrganizationSetup()
+        {
+            ViewBag.Organizations = setupManager.GetAllOrganizations();
+            return View();
+        }
+        [HttpPost]
+        public ActionResult SaveOrganization(Organization organization)
+        {
+            string msg = setupManager.SaveOrganization(organization);
+            return Json(msg, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult GetOrganizations()
+        {
+            List<Organization> organizations = setupManager.GetAllOrganizations();
+            return Json(organizations, JsonRequestBehavior.AllowGet);
+        }
+        /*
+         * Organization setup code ends here
+         */
+
+        /*
+         * Outlet/ Branch setup code starts here
+         */
+
+        /*
+         * Outlet/ Branch setup code ends here
+         */
     }
 }
