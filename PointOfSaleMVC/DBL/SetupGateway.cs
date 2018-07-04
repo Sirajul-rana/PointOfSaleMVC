@@ -280,8 +280,8 @@ namespace PointOfSaleMVC.DBL
         public List<Branch> GetAllBranches()
         {
             List<Branch> branches = new List<Branch>();
-            string query = "Select O.OrganizationName, B.BranchName, B.BranchCode, B.BranchContactNo, B.BranchAddress from Branch B " +
-                           "Inner join Organization O on O.OrganizationId = B.OrganizationId";
+            string query = "SELECT O.OrganizationName, B.BranchName, B.BranchCode, B.BranchContactNo, B.BranchAddress FROM Branch B " +
+                           "INNER JOIN Organization O ON O.OrganizationId = B.OrganizationId";
             Gateway gateway = new Gateway(query);
             SqlDataReader reader = gateway.SqlCommand.ExecuteReader();
 
@@ -325,6 +325,78 @@ namespace PointOfSaleMVC.DBL
          */
 
         /*
+         * Party setup code starts here
+         */
+        public List<PartyType> GetAllPartyTypes()
+        {
+            List<PartyType> partyTypes = new List<PartyType>();
+            string query = "SELECT Pt.PartyTypeId, Pt.Type FROM PartyType Pt";
+            Gateway gateway = new Gateway(query);
+            SqlDataReader reader = gateway.SqlCommand.ExecuteReader();
+
+            while (reader.Read())
+            {
+                PartyType partyType = new PartyType();
+                partyType.PartyTypeId = (int)reader["PartyTypeId"];
+                partyType.Type = reader["Type"].ToString();
+                partyTypes.Add(partyType);
+            }
+
+            reader.Close();
+            gateway.Connection.Close();
+            return partyTypes;
+        }
+        public List<Party> GetAllParties()
+        {
+            List<Party> parties = new List<Party>();
+            string query = "SELECT Pt.Type, P.PartyName, P.PartyCode, P.PartyContactNo, P.PartyEmail, P.PartyAddress FROM Party P " +
+                           "INNER JOIN PartyType Pt ON P.PartyTypeId = Pt.PartyTypeId";
+
+            Gateway gateway = new Gateway(query);
+            SqlDataReader reader = gateway.SqlCommand.ExecuteReader();
+
+            while (reader.Read())
+            {
+                Party party = new Party();
+                party.PartyName = reader["PartyName"].ToString();
+                party.PartyCode = reader["PartyCode"].ToString();
+                party.PartyContactNo = reader["PartyContactNo"].ToString();
+                party.PartyEmail = reader["PartyEmail"].ToString();
+                party.PartyAddress = reader["PartyAddress"].ToString();
+                PartyType partyType = new PartyType();
+                partyType.Type = reader["Type"].ToString();
+                party.PartyType = partyType;
+                parties.Add(party);
+            }
+
+            reader.Close();
+            gateway.Connection.Close();
+            return parties;
+        }
+
+        public int SaveParty(Party party)
+        {
+            string query = "INSERT INTO Party (PartyName, PartyCode, PartyContactNo, PartyEmail, PartyAddress, PartyTypeId)" +
+                           " VALUES (@partyName, @partyCode, @partyContactNo, @partyEmail, @partyAddress, @partyTypeId)";
+            Gateway gateway = new Gateway(query);
+            gateway.SqlCommand.Parameters.Clear();
+            gateway.SqlCommand.Parameters.AddWithValue("@partyName", party.PartyName);
+            gateway.SqlCommand.Parameters.AddWithValue("@partyCode", party.PartyCode);
+            gateway.SqlCommand.Parameters.AddWithValue("@partyContactNo", party.PartyContactNo);
+            gateway.SqlCommand.Parameters.AddWithValue("@partyEmail", party.PartyEmail);
+            gateway.SqlCommand.Parameters.AddWithValue("@partyAddress", party.PartyAddress);
+            gateway.SqlCommand.Parameters.AddWithValue("@partyTypeId", party.PartyTypeId);
+
+            int rowAffected = gateway.SqlCommand.ExecuteNonQuery();
+
+            gateway.Connection.Close();
+            return rowAffected;
+        }
+        /*
+         * Party setup code ends here
+         */
+
+        /*
          * Organization setup code starts here
          */
 
@@ -332,13 +404,7 @@ namespace PointOfSaleMVC.DBL
          * Organization setup code ends here
          */
 
-        /*
-         * Organization setup code starts here
-         */
 
-        /*
-         * Organization setup code ends here
-         */
 
     }
 }

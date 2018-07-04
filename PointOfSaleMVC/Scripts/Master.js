@@ -657,11 +657,115 @@
      */
 
     /*
-     * Organization setup code starts here
+     * Party setup code starts here
      */
+    $("#savePartyForm").validate({
+        rules: {
+            PartyTypeId: {
+                required: true
+            },
+            PartyName: {
+                required: true
+            },
+            PartyCode: {
+                required: true
+            },
+            PartyContactNo: {
+                required: true
+            },
+            PartyEmail: {
+                required: true
+            },
+            PartyAddress: {
+                required: true
+            }
+        },
+        messages: {
+            PartyTypeId: {
+                required: "Please select an option"
+            },
+            PartyName: {
+                required: "Please enter party name"
+            },
+            PartyCode: {
+                required: "Please enter party code"
+            },
+            PartyContactNo: {
+                required: "Please enter party contact"
+            },
+            PartyEmail: {
+                required: "Please enter party email address"
+            },
+            PartyAddress: {
+                required: "Please enter party address"
+            }
+        }
+    });
+    function loadPartyTable() {
+        $.get("/Setup/GetParties/", function (data) {
+            var tblHtml = "";
+            $.each(data, function (i, val) {
+                tblHtml += "<tr><td></td><td>" + val.PartyType.Type + "</td>";
+                tblHtml += "<td>" + val.PartyName + "</td>";
+                tblHtml += "<td>" + val.PartyCode + "</td>";
+                tblHtml += "<td>" + val.PartyContactNo + "</td>";
+                tblHtml += "<td>" + val.PartyEmail + "</td>";
+                tblHtml += "<td>" + val.PartyAddress + "</td>";
+                tblHtml += '<td><button type="button" id="btnEdit" class="btn btn-primary btnEdit"><i class="fa fa-edit"></i></button>';
+                tblHtml += '<button type="button" class="btn btn-danger btnDelete" id="btnDelete"><i class="fa fa-remove"></i></button></td></tr>';
+            });
 
+            $("#partyTableBody").html(tblHtml);
+        });
+    }
+    $("#savePartyButton").click(function () {
+        if ($("#savePartyForm").valid()) {
+            var partyTypeId = $("#PartyTypeId").val();
+            var partyName = $("#PartyName").val();
+            var partyCode = $("#PartyCode").val();
+            var partyContactNo = $("#PartyContactNo").val();
+            var partyEmail = $("#PartyEmail").val();
+            var partyAddress = $("#PartyAddress").val();
+
+            $.post("/Setup/SaveParty/",
+                {
+                    PartyTypeId: partyTypeId,
+                    PartyName: partyName,
+                    PartyCode: partyCode,
+                    PartyContactNo: partyContactNo,
+                    PartyEmail: partyEmail,
+                    PartyAddress: partyAddress
+                },
+                function (data, status) {
+                    if (status === "success") {
+                        $("#PartyTypeId").prop('selectedIndex', 0);
+                        $("#PartyName").val("");
+                        $("#PartyCode").val("");
+                        $("#PartyContactNo").val("");
+                        $("#PartyEmail").val("");
+                        $("#PartyAddress").val("");
+                        alertify.success("Data: " + data + "\nStatus: " + status);
+                        loadPartyTable();
+                    } else {
+                        loadPartyTable();
+                        alertify.error("Data: " + data + "\nStatus: " + status);
+                    }
+
+                });
+
+        }
+    });
+    $("#cancelPartyButton").click(function () {
+        $("#PartyTypeId").prop('selectedIndex', 0);
+        $("#PartyName").val("");
+        $("#PartyCode").val("");
+        $("#PartyContactNo").val("");
+        $("#PartyEmail").val("");
+        $("#PartyAddress").val("");
+        alertify.error("All Cleared");
+    });
     /*
-     * Organization setup code ends here
+     * Party setup code ends here
      */
 
     /*

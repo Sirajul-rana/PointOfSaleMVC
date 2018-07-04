@@ -146,11 +146,30 @@ namespace PointOfSaleMVC.Manager
          */
 
         /*
-         * Organization setup code starts here
+         * Party setup code starts here
          */
+        public List<PartyType> GetAllPartyTypes()
+        {
+            return setupGateway.GetAllPartyTypes();
+        }
+        public List<Party> GetAllParties()
+        {
+            return setupGateway.GetAllParties();
+        }
 
+        public string SaveParty(Party party)
+        {
+            if (setupGateway.SaveParty(party) >= 0)
+            {
+                return "Party has been added successfully";
+            }
+            else
+            {
+                return "Adding failed";
+            }
+        }
         /*
-         * Organization setup code ends here
+         * Party setup code ends here
          */
 
         /*

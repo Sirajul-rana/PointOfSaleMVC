@@ -148,7 +148,24 @@ namespace PointOfSaleMVC.Controllers
         /*
          * Organization setup code starts here
          */
+        public ActionResult PartySetup()
+        {
+            ViewBag.AllParties = new SelectList(setupManager.GetAllPartyTypes(), "PartyTypeId", "Type", 0);
+            ViewBag.Parties = setupManager.GetAllParties();
+            return View();
+        }
+        [HttpPost]
+        public ActionResult SaveParty(Party party)
+        {
+            string msg = setupManager.SaveParty(party);
+            return Json(msg, JsonRequestBehavior.AllowGet);
+        }
 
+        public ActionResult GetParties()
+        {
+            List<Party> parties = setupManager.GetAllParties();
+            return Json(parties, JsonRequestBehavior.AllowGet);
+        }
         /*
          * Organization setup code ends here
          */
