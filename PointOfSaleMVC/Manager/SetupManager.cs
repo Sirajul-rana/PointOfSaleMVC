@@ -113,6 +113,11 @@ namespace PointOfSaleMVC.Manager
         {
             return setupGateway.GetAllOrganizations();
         }
+
+        public List<Organization> GetAllOrganization()
+        {
+            return setupGateway.GetOrganizationsForDropdown();
+        }
         /*
          * Organization setup code ends here
          */
@@ -121,7 +126,21 @@ namespace PointOfSaleMVC.Manager
         /*
          * Outlet/ Branch setup code starts here
          */
-
+        public string SaveBranch(Branch branch)
+        {
+            if (setupGateway.SaveBranch(branch) >= 0)
+            {
+                return "Organization has been added successfully";
+            }
+            else
+            {
+                return "Adding failed";
+            }
+        }
+        public List<Branch> GetAllBranches()
+        {
+            return setupGateway.GetAllBranches();
+        }
         /*
          * Outlet/ Branch setup code ends here
          */
@@ -133,6 +152,16 @@ namespace PointOfSaleMVC.Manager
         /*
          * Organization setup code ends here
          */
+
+        /*
+         * Organization setup code starts here
+         */
+
+        /*
+         * Organization setup code ends here
+         */
+
+
 
     }
 }

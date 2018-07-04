@@ -554,4 +554,121 @@
      * Organization setup code ends here
      */
 
+
+    /*
+     * Outlet/ Branch setup code starts here
+     */
+    $("#saveBranchForm").validate({
+        rules: {
+            OrganizationId: {
+                required: true
+            },
+            BranchName: {
+                required: true
+            },
+            BranchCode: {
+                required: true
+            },
+            BranchContactNo: {
+                required: true
+            },
+            BranchAddress: {
+                required: true
+            }
+        },
+        messages: {
+            OrganizationId: {
+                required: "Please select an option"
+            },
+            BranchName: {
+                required: "Please enter Branch name"
+            },
+            BranchCode: {
+                required: "Please enter Branch code"
+            },
+            BranchContactNo: {
+                required: "Please enter Branch contact"
+            },
+            BranchAddress: {
+                required: "Please enter Branch address"
+            }
+        }
+    });
+    function loadBranchTable() {
+        $.get("/Setup/Getbranches/", function (data) {
+            var tblHtml = "";
+            $.each(data, function (i, val) {
+                tblHtml += "<tr><td></td><td>" + val.Organization.OrganizationName + "</td>";
+                tblHtml += "<td>" + val.BranchName + "</td>";
+                tblHtml += "<td>" + val.BranchCode + "</td>";
+                tblHtml += "<td>" + val.BranchContactNo + "</td>";
+                tblHtml += "<td>" + val.BranchAddress + "</td>";
+                tblHtml += '<td><button type="button" id="btnEdit" class="btn btn-primary btnEdit"><i class="fa fa-edit"></i></button>';
+                tblHtml += '<button type="button" class="btn btn-danger btnDelete" id="btnDelete"><i class="fa fa-remove"></i></button></td></tr>';
+            });
+
+            $("#branchTableBody").html(tblHtml);
+        });
+    }
+    $("#saveBranchButton").click(function () {
+        if ($("#saveBranchForm").valid()) {
+            var organizationId = $("#OrganizationId").val();
+            var branchName = $("#BranchName").val();
+            var branchCode = $("#BranchCode").val();
+            var branchContactNo = $("#BranchContactNo").val();
+            var branchAddress = $("#BranchAddress").val();
+
+            $.post("/Setup/SaveBranch/",
+                {
+                    OrganizationId: organizationId,
+                    BranchName: branchName,
+                    BranchCode: branchCode,
+                    BranchContactNo: branchContactNo,
+                    BranchAddress: branchAddress
+                },
+                function (data, status) {
+                    if (status === "success") {
+                        $("#OrganizationId").prop('selectedIndex', 0);
+                        $("#BranchName").val("");
+                        $("#BranchCode").val("");
+                        $("#BranchContactNo").val("");
+                        $("#BranchAddress").val("");
+                        alertify.success("Data: " + data + "\nStatus: " + status);
+                        loadBranchTable();
+                    } else {
+                        loadBranchTable();
+                        alertify.error("Data: " + data + "\nStatus: " + status);
+                    }
+
+                });
+
+        }
+    });
+    $("#cancelBranchButton").click(function () {
+        $("#OrganizationId").prop('selectedIndex', 0);
+        $("#BranchName").val("");
+        $("#BranchCode").val("");
+        $("#BranchContactNo").val("");
+        $("#BranchAddress").val("");
+        alertify.error("All Cleared");
+    });
+    /*
+     * Outlet/ Branch setup code ends here
+     */
+
+    /*
+     * Organization setup code starts here
+     */
+
+    /*
+     * Organization setup code ends here
+     */
+
+    /*
+     * Organization setup code starts here
+     */
+
+    /*
+     * Organization setup code ends here
+     */
 });

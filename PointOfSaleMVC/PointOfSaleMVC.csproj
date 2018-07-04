@@ -160,6 +160,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Manager\SetupManager.cs" />
+    <Compile Include="Models\Branch.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\ExpenseCategory.cs" />
     <Compile Include="Models\Item.cs" />
@@ -277,6 +278,7 @@
     <Content Include="Views\Setup\ItemSetup.cshtml" />
     <Content Include="Views\Setup\ExpenseCategorySetup.cshtml" />
     <Content Include="Views\Setup\OrganizationSetup.cshtml" />
+    <Content Include="Views\Setup\BranchSetup.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

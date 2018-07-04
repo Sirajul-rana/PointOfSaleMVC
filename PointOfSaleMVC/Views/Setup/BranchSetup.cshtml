@@ -1,0 +1,124 @@
+﻿@using PointOfSaleMVC.Models
+@model PointOfSaleMVC.Models.Branch
+
+@{
+    ViewBag.Title = "BranchSetup";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Branch Setup</h2>
+<hr class="my-4" />
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "saveBranchForm", name = "saveBranchForm" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="row">
+            <div class="col-md"></div>
+            <div class="col-md">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.OrganizationId, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.OrganizationId, (SelectList)ViewBag.AllOrganization, "Select Organization", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.OrganizationId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.BranchName, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.BranchName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.BranchName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.BranchCode, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.BranchCode, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.BranchCode, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.BranchContactNo, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.BranchContactNo, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.BranchContactNo, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.BranchAddress, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.TextAreaFor(model => model.BranchAddress, new { @class = "form-control" } )
+                        @Html.ValidationMessageFor(model => model.BranchAddress, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="button" value="Save" id="saveBranchButton" name="saveBranchButton" class="btn btn-success" />
+                        <input type="button" value="Cancel" id="cancelBranchButton" name="cancelBranchButton" class="btn btn-danger" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md"></div>
+        </div>
+        
+    </div>
+}
+
+<table class="table table-bordered table-hover table-striped table-light css-serial">
+    <tr class="thead-dark">
+        <th>
+            SL
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OrganizationId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BranchName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BranchCode)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BranchContactNo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BranchAddress)
+        </th>
+        <th>
+            @Html.DisplayName("Action")
+        </th>
+    </tr>
+
+    <tbody id="branchTableBody">
+        @foreach (var item in (List<Branch>)ViewBag.Branchs)
+        {
+            <tr>
+                <td></td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Organization.OrganizationName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BranchName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BranchCode)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BranchContactNo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BranchAddress)
+                </td>
+                <td>
+                    <button type="button" id="btnEdit" class="btn btn-primary btnEdit"><i class="fa fa-edit"></i></button>
+                    <button type="button" class="btn btn-danger btnDelete" id="btnDelete"><i class="fa fa-remove"></i></button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

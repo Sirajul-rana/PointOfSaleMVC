@@ -121,9 +121,44 @@ namespace PointOfSaleMVC.Controllers
         /*
          * Outlet/ Branch setup code starts here
          */
+        [HttpGet]
+        public ActionResult BranchSetup()
+        {
+            ViewBag.Branchs = setupManager.GetAllBranches();
+            ViewBag.AllOrganization = new SelectList(setupManager.GetAllOrganization(), "OrganizationId", "OrganizationName", 0);
+            return View();
+        }
+        [HttpPost]
+        public ActionResult SaveBranch(Branch branch)
+        {
+            string msg = setupManager.SaveBranch(branch);
+            return Json(msg, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult Getbranches()
+        {
+            List<Branch> branches = setupManager.GetAllBranches();
+            return Json(branches, JsonRequestBehavior.AllowGet);
+        }
+
 
         /*
          * Outlet/ Branch setup code ends here
+         */
+
+        /*
+         * Organization setup code starts here
+         */
+
+        /*
+         * Organization setup code ends here
+         */
+
+        /*
+         * Organization setup code starts here
+         */
+
+        /*
+         * Organization setup code ends here
          */
     }
 }

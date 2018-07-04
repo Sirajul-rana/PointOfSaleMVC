@@ -250,6 +250,26 @@ namespace PointOfSaleMVC.DBL
             gateway.Connection.Close();
             return organizations;
         }
+
+        public List<Organization> GetOrganizationsForDropdown()
+        {
+            List<Organization> organizations = new List<Organization>();
+            string query = "SELECT O.OrganizationId,O.OrganizationName FROM Organization O";
+            Gateway gateway = new Gateway(query);
+            SqlDataReader reader = gateway.SqlCommand.ExecuteReader();
+
+            while (reader.Read())
+            {
+                Organization organization = new Organization();
+                organization.OrganizationId = (int)reader["OrganizationId"];
+                organization.OrganizationName = reader["OrganizationName"].ToString();
+                organizations.Add(organization);
+            }
+
+            reader.Close();
+            gateway.Connection.Close();
+            return organizations;
+        }
         /*
          * Organization setup code ends here
          */
@@ -257,9 +277,67 @@ namespace PointOfSaleMVC.DBL
         /*
          * Outlet/ Branch setup code starts here
          */
+        public List<Branch> GetAllBranches()
+        {
+            List<Branch> branches = new List<Branch>();
+            string query = "Select O.OrganizationName, B.BranchName, B.BranchCode, B.BranchContactNo, B.BranchAddress from Branch B " +
+                           "Inner join Organization O on O.OrganizationId = B.OrganizationId";
+            Gateway gateway = new Gateway(query);
+            SqlDataReader reader = gateway.SqlCommand.ExecuteReader();
 
+            while (reader.Read())
+            {
+                Branch branch = new Branch();
+                branch.BranchName = reader["BranchName"].ToString();
+                branch.BranchCode = reader["BranchCode"].ToString();
+                branch.BranchContactNo = reader["BranchContactNo"].ToString();
+                branch.BranchAddress = reader["BranchAddress"].ToString();
+                Organization organization = new Organization();
+                organization.OrganizationName = reader["OrganizationName"].ToString();
+                branch.Organization = organization;
+                branches.Add(branch);
+            }
+
+            reader.Close();
+            gateway.Connection.Close();
+            return branches;
+        }
+
+        public int SaveBranch(Branch branch)
+        {
+            string query = "INSERT INTO Branch (BranchName, BranchCode,BranchContactNo, BranchAddress, OrganizationId)" +
+                           " VALUES (@branchName, @branchCode, @branchContactNo, @branchAddress, @organizationId)";
+            Gateway gateway = new Gateway(query);
+            gateway.SqlCommand.Parameters.Clear();
+            gateway.SqlCommand.Parameters.AddWithValue("@branchName", branch.BranchName);
+            gateway.SqlCommand.Parameters.AddWithValue("@branchCode", branch.BranchCode);
+            gateway.SqlCommand.Parameters.AddWithValue("@branchContactNo", branch.BranchContactNo);
+            gateway.SqlCommand.Parameters.AddWithValue("@branchAddress", branch.BranchAddress);
+            gateway.SqlCommand.Parameters.AddWithValue("@organizationId", branch.OrganizationId);
+
+            int rowAffected = gateway.SqlCommand.ExecuteNonQuery();
+
+            gateway.Connection.Close();
+            return rowAffected;
+        }
         /*
          * Outlet/ Branch setup code ends here
+         */
+
+        /*
+         * Organization setup code starts here
+         */
+
+        /*
+         * Organization setup code ends here
+         */
+
+        /*
+         * Organization setup code starts here
+         */
+
+        /*
+         * Organization setup code ends here
          */
 
     }
