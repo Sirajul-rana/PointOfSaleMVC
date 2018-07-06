@@ -141,6 +141,11 @@ namespace PointOfSaleMVC.Manager
         {
             return setupGateway.GetAllBranches();
         }
+
+        public List<Branch> GetBranches()
+        {
+            return setupGateway.GetBranches();
+        }
         /*
          * Outlet/ Branch setup code ends here
          */
@@ -173,14 +178,27 @@ namespace PointOfSaleMVC.Manager
          */
 
         /*
-         * Organization setup code starts here
+         * Employee setup code starts here
          */
-
+        public string SaveEmployee(Employee employee)
+        {
+            if (setupGateway.SaveEmployee(employee) >= 0)
+            {
+                return "Employee has been added successfully";
+            }
+            else
+            {
+                return "Adding failed";
+            }
+        }
         /*
-         * Organization setup code ends here
+         * Employee setup code ends here
          */
 
 
-
+        public List<Employee> GetAllEmployees()
+        {
+            return setupGateway.GetAllEmployees();
+        }
     }
 }

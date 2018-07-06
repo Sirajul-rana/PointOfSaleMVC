@@ -1,0 +1,117 @@
+﻿@model IEnumerable<PointOfSaleMVC.Models.Employee>
+
+@{
+    ViewBag.Title = "ViewEmployees";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>View Employees</h2>
+<hr class="my-4"/>
+<table class="table table-bordered table-hover table-striped table-light css-serial">
+    <tr class="thead-dark">
+        <th>SL</th>
+        <th>
+            @Html.DisplayNameFor(model => model.EmployeeName)
+        </th>
+        @*<th>
+            @Html.DisplayNameFor(model => model.EmployeeFatherName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EmployeeMotherName)
+        </th>*@
+        <th>
+            @Html.DisplayNameFor(model => model.EmployeeCode)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EmployeeJoinDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EmployeeContactNo)
+        </th>
+        @*<th>
+            @Html.DisplayNameFor(model => model.EmployeeEmergencyContactNo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EmployeeNId)
+        </th>*@
+        @*<th>
+            @Html.DisplayNameFor(model => model.EmployeeUsername)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EmployeePassword)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EmployeeConfirmPassword)
+        </th>*@
+        <th>
+            @Html.DisplayNameFor(model => model.EmployeeEmail)
+        </th>
+        @*<th>
+            @Html.DisplayNameFor(model => model.EmployeePresentAddress)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EmployeePermanentAddress)
+        </th>*@
+        <th>
+            @Html.DisplayNameFor(model => model.BranchId)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td></td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EmployeeName)
+        </td>
+        @*<td>
+            @Html.DisplayFor(modelItem => item.EmployeeFatherName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EmployeeMotherName)
+        </td>*@
+        <td>
+            @Html.DisplayFor(modelItem => item.EmployeeCode)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EmployeeJoinDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EmployeeContactNo)
+        </td>
+        @*<td>
+            @Html.DisplayFor(modelItem => item.EmployeeEmergencyContactNo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EmployeeNId)
+        </td>*@
+        @*<td>
+            @Html.DisplayFor(modelItem => item.EmployeeUsername)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EmployeePassword)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EmployeeConfirmPassword)
+        </td>*@
+        <td>
+            @Html.DisplayFor(modelItem => item.EmployeeEmail)
+        </td>
+        @*<td>
+            @Html.DisplayFor(modelItem => item.EmployeePresentAddress)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EmployeePermanentAddress)
+        </td>*@
+        <td>
+            @Html.DisplayFor(modelItem => item.Branch.BranchName)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new {id = item.EmployeeId}) |
+            @Html.ActionLink("Details", "Details", new {id = item.EmployeeId}) |
+            @Html.ActionLink("Delete", "Delete", new {id = item.EmployeeId})
+        </td>
+    </tr>
+}
+
+</table>

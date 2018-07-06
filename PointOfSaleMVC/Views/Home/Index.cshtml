@@ -7,63 +7,142 @@
     <h2>Point Of Sale</h2>
 </div>
 <hr style="border-top: 1px solid #20c997; " />
-<div style="position: relative; top: 20%; left: 15%">
+<div>
     <div class="row">
-
-        <div class="col-lg-2 col-sm-6">
-            <div class="circle-tile ">
-                <a href="#">
-                    <div class="circle-tile-heading dark-gray">
-                        <i class="fa fa-building-o fa-fw fa-3x"></i>
+        <div class="col-md-3">
+            <a class="info-tiles tiles-inverse has-footer" href="#">
+                <div class="tiles-heading">
+                    <div class="pull-left">Orders</div>
+                    <div class="pull-right">
+                        <div id="tileorders" class="sparkline-block"><canvas width="39" height="13" style="display: inline-block; width: 39px; height: 13px; vertical-align: top;"></canvas></div>
                     </div>
-                </a>
-                <div class="circle-tile-content dark-gray">
-                    <div class="circle-tile-description text-faded"> Departments</div>
-                    <div class="circle-tile-number text-faded ">10</div>
                 </div>
-            </div>
+                <div class="tiles-body">
+                    <div class="text-center">1,275</div>
+                </div>
+                <div class="tiles-footer">
+                    <div class="pull-left">manage orders</div>
+                    <div class="pull-right percent-change">+20.7%</div>
+                </div>
+            </a>
         </div>
 
-        <div class="col-lg-2 col-sm-6">
-            <div class="circle-tile ">
-                <a href="#">
-                    <div class="circle-tile-heading dark-blue">
-                        <i class="fa fa-users fa-fw fa-3x"></i>
+        <div class="col-md-3">
+            <a class="info-tiles tiles-green has-footer" href="#">
+                <div class="tiles-heading">
+                    <div class="pull-left">Revenues</div>
+                    <div class="pull-right">
+                        <div id="tilerevenues" class="sparkline-block"><canvas width="40" height="13" style="display: inline-block; width: 40px; height: 13px; vertical-align: top;"></canvas></div>
                     </div>
-                </a>
-                <div class="circle-tile-content dark-blue">
-                    <div class="circle-tile-description text-faded"> Students</div>
-                    <div class="circle-tile-number text-faded ">10000</div>
                 </div>
-            </div>
+                <div class="tiles-body">
+                    <div class="text-center">71,250tk</div>
+                </div>
+                <div class="tiles-footer">
+                    <div class="pull-left">go to accounts</div>
+                    <div class="pull-right percent-change">+17.2%</div>
+                </div>
+            </a>
         </div>
 
-        <div class="col-lg-2 col-sm-6">
-            <div class="circle-tile ">
-                <a href="#">
-                    <div class="circle-tile-heading red">
-                        <i class="fa fa-users fa-fw fa-3x"></i>
+        <div class="col-md-3">
+            <a class="info-tiles tiles-blue has-footer" href="#">
+                <div class="tiles-heading">
+                    <div class="pull-left">Products</div>
+                    <div class="pull-right">
+                        <div id="tiletickets" class="sparkline-block"><canvas width="13" height="13" style="display: inline-block; width: 13px; height: 13px; vertical-align: top;"></canvas></div>
                     </div>
-                </a>
-                <div class="circle-tile-content red">
-                    <div class="circle-tile-description text-faded"> Teachers </div>
-                    <div class="circle-tile-number text-faded ">100</div>
                 </div>
-            </div>
+                <div class="tiles-body">
+                    <div class="text-center">1,500</div>
+                </div>
+                <div class="tiles-footer">
+                    <div class="pull-left">see all tickets</div>
+                    <div class="pull-right percent-change">+10.3%</div>
+                </div>
+            </a>
         </div>
 
-        <div class="col-lg-2 col-sm-6">
-            <div class="circle-tile ">
-                <a href="#">
-                    <div class="circle-tile-heading green">
-                        <i class="fa fa-book fa-fw fa-3x"></i>
+        <div class="col-md-3">
+            <a class="info-tiles tiles-midnightblue has-footer" href="@Url.Action("ViewEmployees","Setup")">
+                <div class="tiles-heading">
+                    <div class="pull-left">Employees</div>
+                    <div class="pull-right">
+                        <div id="tilemembers" class="sparkline-block"><canvas width="39" height="13" style="display: inline-block; width: 39px; height: 13px; vertical-align: top;"></canvas></div>
                     </div>
-                </a>
-                <div class="circle-tile-content green">
-                    <div class="circle-tile-description text-faded"> Courses </div>
-                    <div class="circle-tile-number text-faded ">100</div>
+                </div>
+                <div class="tiles-body">
+                    <div class="text-center">6,500</div>
+                </div>
+                <div class="tiles-footer">
+                    <div class="pull-left">manage members</div>
+                    <div class="pull-right percent-change">-11.1%</div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+@*<div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+        <div>
+            <div class="col-lg-2 col-sm-6">
+                <div class="circle-tile ">
+                    <a href="#">
+                        <div class="circle-tile-heading dark-gray">
+                            <i class="fa fa-building-o fa-fw fa-3x"></i>
+                        </div>
+                    </a>
+                    <div class="circle-tile-content dark-gray">
+                        <div class="circle-tile-description text-faded"> Departments</div>
+                        <div class="circle-tile-number text-faded ">10</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-2 col-sm-6">
+                <div class="circle-tile ">
+                    <a href="#">
+                        <div class="circle-tile-heading dark-blue">
+                            <i class="fa fa-users fa-fw fa-3x"></i>
+                        </div>
+                    </a>
+                    <div class="circle-tile-content dark-blue">
+                        <div class="circle-tile-description text-faded"> Students</div>
+                        <div class="circle-tile-number text-faded ">10000</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-2 col-sm-6">
+                <div class="circle-tile ">
+                    <a href="#">
+                        <div class="circle-tile-heading red">
+                            <i class="fa fa-users fa-fw fa-3x"></i>
+                        </div>
+                    </a>
+                    <div class="circle-tile-content red">
+                        <div class="circle-tile-description text-faded"> Teachers </div>
+                        <div class="circle-tile-number text-faded ">100</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-2 col-sm-6">
+                <div class="circle-tile ">
+                    <a href="#">
+                        <div class="circle-tile-heading green">
+                            <i class="fa fa-book fa-fw fa-3x"></i>
+                        </div>
+                    </a>
+                    <div class="circle-tile-content green">
+                        <div class="circle-tile-description text-faded"> Courses </div>
+                        <div class="circle-tile-number text-faded ">100</div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    <div class="col-md-1"></div>
 </div>
+</div>*@

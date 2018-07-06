@@ -171,11 +171,29 @@ namespace PointOfSaleMVC.Controllers
          */
 
         /*
-         * Organization setup code starts here
+         * Employee setup code starts here
          */
+        [HttpGet]
+        public ActionResult EmployeeSetup()
+        {
+            ViewBag.DropdownBranches = new SelectList(setupManager.GetBranches(), "BranchId", "BranchName", 0);
+            return View();
+        }
+        [HttpPost]
+        public ActionResult SaveEmployee(Employee employee)
+        {
+            string msg = setupManager.SaveEmployee(employee);
+            return Json(msg, JsonRequestBehavior.AllowGet);
+        }
 
+        [HttpGet]
+        public ActionResult ViewEmployees()
+        {
+            List<Employee> employees = setupManager.GetAllEmployees();
+            return View(employees);
+        }
         /*
-         * Organization setup code ends here
+         * Employee setup code ends here
          */
     }
 }

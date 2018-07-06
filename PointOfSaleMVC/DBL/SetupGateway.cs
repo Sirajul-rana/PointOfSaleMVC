@@ -320,6 +320,25 @@ namespace PointOfSaleMVC.DBL
             gateway.Connection.Close();
             return rowAffected;
         }
+        public List<Branch> GetBranches()
+        {
+            List<Branch> branches = new List<Branch>();
+            string query = "SELECT B.BranchId, B.BranchName FROM Branch B";
+            Gateway gateway = new Gateway(query);
+            SqlDataReader reader = gateway.SqlCommand.ExecuteReader();
+
+            while (reader.Read())
+            {
+                Branch branch = new Branch();
+                branch.BranchId = (int)reader["BranchId"];
+                branch.BranchName = reader["BranchName"].ToString();
+                branches.Add(branch);
+            }
+
+            reader.Close();
+            gateway.Connection.Close();
+            return branches;
+        }
         /*
          * Outlet/ Branch setup code ends here
          */
@@ -397,11 +416,76 @@ namespace PointOfSaleMVC.DBL
          */
 
         /*
-         * Organization setup code starts here
+         * Employee setup code starts here
          */
+        public int SaveEmployee(Employee employee)
+        {
+            string query = "INSERT INTO Employee (EmployeeName, EmployeeFatherName, EmployeeMotherName, EmployeeCode," +
+                           " EmployeeJoinDate, EmployeeContactNo, EmployeeEmergencyContactNo, EmployeeNId, EmployeeUsername," +
+                           " EmployeePassword, EmployeeEmail, EmployeePresentAddress, EmployeePermanentAddress, BranchId)" +
+                           " VALUES (@employeeName, @employeeFatherName, @employeeMotherName, @employeeCode, @employeeJoinDate," +
+                           " @employeeContactNo, @employeeEmergencyContactNo, @employeeNId, @employeeUsername, @employeePassword," +
+                           " @employeeEmail, @employeePresentAddress, @employeePermanentAddress, @branchId)";
+            Gateway gateway = new Gateway(query);
+            gateway.SqlCommand.Parameters.Clear();
+            gateway.SqlCommand.Parameters.AddWithValue("@employeeName", employee.EmployeeName);
+            gateway.SqlCommand.Parameters.AddWithValue("@employeeFatherName", employee.EmployeeFatherName);
+            gateway.SqlCommand.Parameters.AddWithValue("@employeeMotherName", employee.EmployeeMotherName);
+            gateway.SqlCommand.Parameters.AddWithValue("@employeeCode", employee.EmployeeCode);
+            gateway.SqlCommand.Parameters.AddWithValue("@employeeJoinDate", employee.EmployeeJoinDate);
+            gateway.SqlCommand.Parameters.AddWithValue("@employeeContactNo", employee.EmployeeContactNo);
+            gateway.SqlCommand.Parameters.AddWithValue("@employeeEmergencyContactNo", employee.EmployeeEmergencyContactNo);
+            gateway.SqlCommand.Parameters.AddWithValue("@employeeNId", employee.EmployeeNId);
+            gateway.SqlCommand.Parameters.AddWithValue("@employeeUsername", employee.EmployeeUsername);
+            gateway.SqlCommand.Parameters.AddWithValue("@employeePassword", employee.EmployeePassword);
+            gateway.SqlCommand.Parameters.AddWithValue("@employeeEmail", employee.EmployeeEmail);
+            gateway.SqlCommand.Parameters.AddWithValue("@employeePresentAddress", employee.EmployeePresentAddress);
+            gateway.SqlCommand.Parameters.AddWithValue("@employeePermanentAddress", employee.EmployeePermanentAddress);
+            gateway.SqlCommand.Parameters.AddWithValue("@branchId", employee.BranchId);
+            int rowAffected = gateway.SqlCommand.ExecuteNonQuery();
 
+            gateway.Connection.Close();
+            return rowAffected;
+        }
+        public List<Employee> GetAllEmployees()
+        {
+            List<Employee> employees = new List<Employee>();
+            string query = "SELECT E.EmployeeId, E.EmployeeName, E.EmployeeFatherName, E.EmployeeMotherName, E.EmployeeCode," +
+                           " E.EmployeeJoinDate, E.EmployeeContactNo, E.EmployeeEmergencyContactNo, E.EmployeeNId," +
+                           " E.EmployeeEmail, E.EmployeePresentAddress, E.EmployeePermanentAddress, B.BranchName FROM Employee E" +
+                           " INNER JOIN Branch B ON B.BranchId = E.BranchId";
+            Gateway gateway = new Gateway(query);
+            SqlDataReader reader = gateway.SqlCommand.ExecuteReader();
+
+            while (reader.Read())
+            {
+                Employee employee = new Employee();
+                employee.EmployeeId = (int) reader["EmployeeId"];
+                employee.EmployeeName = reader["EmployeeName"].ToString();
+                employee.EmployeeFatherName = reader["EmployeeFatherName"].ToString();
+                employee.EmployeeMotherName = reader["EmployeeMotherName"].ToString();
+                employee.EmployeeCode = reader["EmployeeCode"].ToString();
+                employee.EmployeeJoinDate = (DateTime)reader["EmployeeJoinDate"];
+                employee.EmployeeContactNo = reader["EmployeeContactNo"].ToString();
+                employee.EmployeeEmergencyContactNo = reader["EmployeeEmergencyContactNo"].ToString();
+                employee.EmployeeNId = reader["EmployeeNId"].ToString();
+                //employee.EmployeeUsername = reader["EmployeeUsername"].ToString();
+                //employee.EmployeePassword = reader["EmployeePassword"].ToString();
+                employee.EmployeeEmail = reader["EmployeeEmail"].ToString();
+                employee.EmployeePresentAddress = reader["EmployeePresentAddress"].ToString();
+                employee.EmployeePermanentAddress = reader["EmployeePermanentAddress"].ToString();
+                Branch branch = new Branch();
+                branch.BranchName = reader["BranchName"].ToString();
+                employee.Branch = branch;
+                employees.Add(employee);
+            }
+
+            reader.Close();
+            gateway.Connection.Close();
+            return employees;
+        }
         /*
-         * Organization setup code ends here
+         * Employee setup code ends here
          */
 
 

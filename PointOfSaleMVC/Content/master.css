@@ -33,7 +33,7 @@ hr {
     }
 
         .side-collapse-container.out {
-            left: 150px;
+            left: 200px;
         }
 
     .side-collapse {
@@ -41,7 +41,7 @@ hr {
         top: 70px;
         bottom: 0;
         left: 0;
-        width: 150px;
+        width: 200px;
         position: fixed;
         overflow: hidden;
         transition: width .4s;
@@ -58,10 +58,6 @@ hr {
     .dropdown-menu {
         width: 150px;
     }
-}
-
-#btnDelete {
-    margin-left: 15px;
 }
 
 .css-serial {

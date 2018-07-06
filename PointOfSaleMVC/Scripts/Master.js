@@ -7,8 +7,6 @@
         $(sel2).toggleClass('out');
     });
 
-
-
     /*
      * Category Setup page code start here
      */
@@ -769,10 +767,228 @@
      */
 
     /*
-     * Organization setup code starts here
+     * Employee setup code starts here
      */
+    $("#saveEmployeeForm").validate({
+        rules: {
+            BranchId: {
+                required: true
+            },
+            EmployeeName: {
+                required: true
+            },
+            EmployeeFatherName: {
+                required: true
+            },
+            EmployeeMotherName: {
+                required: true
+            },
+            EmployeeCode: {
+                required: true
+            },
+            EmployeeJoinDate: {
+                required: true
+            },
+            EmployeeContactNo: {
+                required: true
+            },
+            EmployeeEmergencyContactNo: {
+                required: true
+            },
+            EmployeeNId: {
+                required: true
+            },
+            EmployeeUsername: {
+                required: true
+            },
+            EmployeePassword: {
+                required: true
+            },
+            EmployeeConfirmPassword: {
+                required: true
+            },
+            EmployeeEmail: {
+                required: true
+            },
+            EmployeePresentAddress: {
+                required: true
+            },
+            EmployeePermanentAddress: {
+                required: true
+            }
+        },
+        messages: {
+            BranchId: {
+                required: "Please select an option"
+            },
+            EmployeeName: {
+                required: "Please enter your name"
+            },
+            EmployeeFatherName: {
+                required: "Please enter your father's name"
+            },
+            EmployeeMotherName: {
+                required: "Please enter your Mother's name"
+            },
+            EmployeeCode: {
+                required: "Please enter code"
+            },
+            EmployeeJoinDate: {
+                required: "Please select a date"
+            },
+            EmployeeContactNo: {
+                required: "Please enter your contact no."
+            },
+            EmployeeEmergencyContactNo: {
+                required: "Please enter your emergency contact"
+            },
+            EmployeeNId: {
+                required: "Please enter your national id"
+            },
+            EmployeeUsername: {
+                required: "Please enter your username"
+            },
+            EmployeePassword: {
+                required: "Please enter your password"
+            },
+            EmployeeConfirmPassword: {
+                required: "Please enter your password again"
+            },
+            EmployeeEmail: {
+                required: "Please enter your email address"
+            },
+            EmployeePresentAddress: {
+                required: "Please enter your present address"
+            },
+            EmployeePermanentAddress: {
+                required: "Please enter your Permanent address"
+            }
+        }
+    });
+    //$("#saveEmployeeForm").children("div").steps({
+    //    headerTag: ".h",
+    //    bodyTag: "tab-pane",
+    //    transitionEffect: "slideLeft",
+    //    onStepChanging: function (event, currentIndex, newIndex) {
+    //        $("#saveEmployeeForm").validate().settings.ignore = ":disabled,:hidden";
+    //        return $("#saveEmployeeForm").valid();
+    //    },
+    //    onFinishing: function (event, currentIndex) {
+    //        $("#saveEmployeeForm").validate().settings.ignore = ":disabled";
+    //        return $("#saveEmployeeForm").valid();
+    //    },
+    //    onFinished: function (event, currentIndex) {
+    //        alert("Submitted!");
+    //    }
+    //});
+    $("#EmployeeJoinDate").datepicker({
+        changeMonth: true,
+        changeYear: true,
+        dateFormat: "yy-mm-dd"
 
+    }).datepicker("setDate", "0");
+
+    $("#nextButton").click(function () {
+        if ($("#saveEmployeeForm").valid()) {
+            $("#personal").addClass("active show");
+            $("#personalTab").addClass("active show");
+            $("#official").removeClass("active show");
+            $("#officialTab").removeClass("active show");
+            $("#nextButton").addClass("d-none");
+            $("#saveEmployeeButton").removeClass("d-none");
+            $("#previousButton").removeClass("d-none");
+
+        }
+    });
+
+    $("#previousButton").click(function () {
+        $("#personal").removeClass("active show");
+        $("#personalTab").removeClass("active show");
+        $("#official").addClass("active show");
+        $("#officialTab").addClass("active show");
+        $("#nextButton").removeClass("d-none");
+        $("#saveEmployeeButton").addClass("d-none");
+        $("#previousButton").addClass("d-none");
+    });
+
+    $("#saveEmployeeButton").click(function () {
+        if ($("#saveEmployeeForm").valid()) {
+
+            var branchId = $("#BranchId").val();
+            var employeeName = $("#EmployeeName").val();
+            var employeeFatherName = $("#EmployeeFatherName").val();
+            var employeeMotherName = $("#EmployeeMotherName").val();
+            var employeeCode = $("#EmployeeCode").val();
+            var employeeJoinDate = $("#EmployeeJoinDate").val();
+            var employeeContactNo = $("#EmployeeContactNo").val();
+            var employeeEmergencyContactNo = $("#EmployeeEmergencyContactNo").val();
+            var employeeNId = $("#EmployeeNId").val();
+            var employeeUsername = $("#EmployeeUsername").val();
+            var employeePassword = $("#EmployeePassword").val();
+            var employeeEmail = $("#EmployeeEmail").val();
+            var employeePresentAddress = $("#EmployeePresentAddress").val();
+            var employeePermanentAddress = $("#EmployeePermanentAddress").val();
+
+            $.post("/Setup/SaveEmployee/",
+                {
+                    BranchId: branchId,
+                    EmployeeName: employeeName,
+                    EmployeeFatherName: employeeFatherName,
+                    EmployeeMotherName: employeeMotherName,
+                    EmployeeCode: employeeCode,
+                    EmployeeJoinDate: employeeJoinDate,
+                    EmployeeContactNo: employeeContactNo,
+                    EmployeeEmergencyContactNo: employeeEmergencyContactNo,
+                    EmployeeNId: employeeNId,
+                    EmployeeUsername: employeeUsername,
+                    EmployeePassword: employeePassword,
+                    EmployeeEmail: employeeEmail,
+                    EmployeePresentAddress: employeePresentAddress,
+                    EmployeePermanentAddress: employeePermanentAddress
+                },
+                function (data, status) {
+                    if (status === "success") {
+                        $("#BranchId").prop('selectedIndex', 0);
+                        $("#EmployeeName").val("");
+                        $("#EmployeeFatherName").val("");
+                        $("#EmployeeMotherName").val("");
+                        $("#EmployeeCode").val("");
+                        $("#EmployeeJoinDate").val("");
+                        $("#EmployeeContactNo").val("");
+                        $("#EmployeeEmergencyContactNo").val("");
+                        $("#EmployeeNId").val("");
+                        $("#EmployeeUsername").val("");
+                        $("#EmployeePassword").val("");
+                        $("#EmployeeEmail").val("");
+                        $("#EmployeePresentAddress").val("");
+                        $("#EmployeePermanentAddress").val("");
+                        alertify.success("Data: " + data + "\nStatus: " + status);
+                    } else {
+                        alertify.error("Data: " + data + "\nStatus: " + status);
+                    }
+
+                });
+
+        }
+    });
+    $("#cancelEmployeeButton").click(function () {
+        $("#BranchId").prop('selectedIndex', 0);
+        $("#EmployeeName").val("");
+        $("#EmployeeFatherName").val("");
+        $("#EmployeeMotherName").val("");
+        $("#EmployeeCode").val("");
+        $("#EmployeeJoinDate").val("");
+        $("#EmployeeContactNo").val("");
+        $("#EmployeeEmergencyContactNo").val("");
+        $("#EmployeeNId").val("");
+        $("#EmployeeUsername").val("");
+        $("#EmployeePassword").val("");
+        $("#EmployeeEmail").val("");
+        $("#EmployeePresentAddress").val("");
+        $("#EmployeePermanentAddress").val("");
+        alertify.error("All Cleared");
+    });
     /*
-     * Organization setup code ends here
+     * Employee setup code ends here
      */
 });
