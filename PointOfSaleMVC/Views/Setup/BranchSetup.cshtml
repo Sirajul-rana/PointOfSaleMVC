@@ -106,7 +106,7 @@
                     @Html.DisplayFor(modelItem => item.BranchName)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.BranchCode)
+                    @Html.DisplayFor(modelItem => item.Organization.OrganizationCode)-@Html.DisplayFor(modelItem => item.BranchCode)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.BranchContactNo)

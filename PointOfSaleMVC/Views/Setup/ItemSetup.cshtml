@@ -52,7 +52,10 @@
                 <div class="form-group">
                     @Html.LabelFor(model => model.ItemCode, htmlAttributes: new { @class = "control-label col-md-4" })
                     <div class="col-md-10">
-                        @Html.EditorFor(model => model.ItemCode, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.TextBox("CategoryCode", null,new { @class = "form-control",style= "float:left;width:  51px;",@readonly= "readonly" })
+                        @Html.EditorFor(model => model.ItemCode, new { htmlAttributes = new { @class = "form-control col-md-6", style = "float:left;margin-left: 5px;" } })
+                        <br/>
+                        <br/>
                         @Html.ValidationMessageFor(model => model.ItemCode, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -115,7 +118,7 @@
                 @Html.DisplayFor(modelItem => item.ItemName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ItemCode)
+                @Html.DisplayFor(modelItem => item.Category.CategoryCode)-@Html.DisplayFor(modelItem => item.ItemCode)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.ItemDescription)
@@ -127,8 +130,8 @@
                 @Html.DisplayFor(modelItem => item.SalePrice) tk
             </td>
             <td>
-                <button type="button" id="btnEdit" class="btn btn-primary btnEdit"><i class="fa fa-edit"></i></button>
-                <button type="button" class="btn btn-danger btnDelete" id="btnDelete"><i class="fa fa-remove"></i></button>
+                <button type="button" id="btnEdit" class="btn btn-primary"><i class="fa fa-edit"></i></button>
+                <button type="button" class="btn btn-danger" id="btnDelete"><i class="fa fa-remove"></i></button>
             </td>
         </tr>
     }

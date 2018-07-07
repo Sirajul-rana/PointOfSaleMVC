@@ -328,10 +328,10 @@
     <Content Include="Views\Setup\PartySetup.cshtml" />
     <Content Include="Views\Setup\EmployeeSetup.cshtml" />
     <Content Include="Views\Setup\ViewEmployees.cshtml" />
+    <Content Include="Views\Operation\SalesOperation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Operation\" />
     <Folder Include="Views\Report\" />
   </ItemGroup>
   <ItemGroup>

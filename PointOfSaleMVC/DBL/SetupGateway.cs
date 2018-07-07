@@ -133,7 +133,7 @@ namespace PointOfSaleMVC.DBL
         {
             List<Item> items = new List<Item>();
             string query =
-                "SELECT C.CategoryName, I.ItemName, I.ItemCode, I.ItemDescription, I.CostPrice, I.SalePrice FROM Item I " +
+                "SELECT C.CategoryName, C.CategoryCode, I.ItemName, I.ItemCode, I.ItemDescription, I.CostPrice, I.SalePrice FROM Item I " +
                 "INNER JOIN Category C ON C.CategoryId = I.CategoryId";
             Gateway gateway = new Gateway(query);
             SqlDataReader reader = gateway.SqlCommand.ExecuteReader();
@@ -148,6 +148,7 @@ namespace PointOfSaleMVC.DBL
                 item.SalePrice = (decimal)reader["SalePrice"];
                 Category category = new Category();
                 category.CategoryName = reader["CategoryName"].ToString();
+                category.CategoryCode = reader["CategoryCode"].ToString();
                 item.Category = category;
                 items.Add(item);
             }
@@ -155,6 +156,28 @@ namespace PointOfSaleMVC.DBL
             reader.Close();
             gateway.Connection.Close();
             return items;
+        }
+
+        public int GetItemCount(Item item)
+        {
+            int itemCount = 0;
+            string query = "select COUNT(*) ItemCount from Item where CategoryId = @categoryId";
+            Gateway gateway = new Gateway(query);
+            gateway.SqlCommand.Parameters.Clear();
+            gateway.SqlCommand.Parameters.AddWithValue("@categoryId", item.CategoryId);
+
+            SqlDataReader reader = gateway.SqlCommand.ExecuteReader();
+
+            if (reader.HasRows)
+            {
+                reader.Read();
+                itemCount = (int) reader["ItemCount"];
+            }
+            
+
+            reader.Close();
+            gateway.Connection.Close();
+            return itemCount;
         }
         /*
          * Item setup code ends here
@@ -280,7 +303,7 @@ namespace PointOfSaleMVC.DBL
         public List<Branch> GetAllBranches()
         {
             List<Branch> branches = new List<Branch>();
-            string query = "SELECT O.OrganizationName, B.BranchName, B.BranchCode, B.BranchContactNo, B.BranchAddress FROM Branch B " +
+            string query = "SELECT O.OrganizationName, O.OrganizationCode, B.BranchName, B.BranchCode, B.BranchContactNo, B.BranchAddress FROM Branch B " +
                            "INNER JOIN Organization O ON O.OrganizationId = B.OrganizationId";
             Gateway gateway = new Gateway(query);
             SqlDataReader reader = gateway.SqlCommand.ExecuteReader();
@@ -294,6 +317,7 @@ namespace PointOfSaleMVC.DBL
                 branch.BranchAddress = reader["BranchAddress"].ToString();
                 Organization organization = new Organization();
                 organization.OrganizationName = reader["OrganizationName"].ToString();
+                organization.OrganizationCode = reader["OrganizationCode"].ToString();
                 branch.Organization = organization;
                 branches.Add(branch);
             }
@@ -338,6 +362,28 @@ namespace PointOfSaleMVC.DBL
             reader.Close();
             gateway.Connection.Close();
             return branches;
+        }
+
+        public int GetOrganizationCode(Organization organization)
+        {
+            int itemCount = 0;
+            string query = "select COUNT(*) ItemCount from Branch where OrganizationId = @organizationId";
+            Gateway gateway = new Gateway(query);
+            gateway.SqlCommand.Parameters.Clear();
+            gateway.SqlCommand.Parameters.AddWithValue("@organizationId", organization.OrganizationId);
+
+            SqlDataReader reader = gateway.SqlCommand.ExecuteReader();
+
+            if (reader.HasRows)
+            {
+                reader.Read();
+                itemCount = (int)reader["ItemCount"];
+            }
+
+
+            reader.Close();
+            gateway.Connection.Close();
+            return itemCount;
         }
         /*
          * Outlet/ Branch setup code ends here
@@ -489,6 +535,6 @@ namespace PointOfSaleMVC.DBL
          */
 
 
-
+        
     }
 }

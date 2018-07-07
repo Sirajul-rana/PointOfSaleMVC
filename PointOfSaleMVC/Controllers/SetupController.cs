@@ -66,7 +66,12 @@ namespace PointOfSaleMVC.Controllers
             List<Item> items= setupManager.GetAllItems();
             return Json(items, JsonRequestBehavior.AllowGet);
         }
-
+        [HttpPost]
+        public ActionResult GetItemCode(Item item)
+        {
+            string itemCode = setupManager.GetItemCode(item);
+            return Json(itemCode,JsonRequestBehavior.AllowGet);
+        }
         /*
          * Item setup code ends here
          */
@@ -114,6 +119,8 @@ namespace PointOfSaleMVC.Controllers
             List<Organization> organizations = setupManager.GetAllOrganizations();
             return Json(organizations, JsonRequestBehavior.AllowGet);
         }
+
+        
         /*
          * Organization setup code ends here
          */
@@ -140,7 +147,12 @@ namespace PointOfSaleMVC.Controllers
             return Json(branches, JsonRequestBehavior.AllowGet);
         }
 
-
+        [HttpPost]
+        public ActionResult GetOrganizationCode(Organization organization)
+        {
+            string organizationCode = setupManager.GetOrganizationCode(organization);
+            return Json(organizationCode, JsonRequestBehavior.AllowGet);
+        }
         /*
          * Outlet/ Branch setup code ends here
          */

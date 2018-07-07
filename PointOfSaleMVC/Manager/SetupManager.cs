@@ -66,6 +66,18 @@ namespace PointOfSaleMVC.Manager
         {
             return setupGateway.GetAllItems();
         }
+        public string GetItemCode(Item item)
+        {
+            int countDeptStd = setupGateway.GetItemCount(item) + 1;
+            int noOfZeroToBeAdded = 6 - countDeptStd.ToString().Length;
+            string noOfZero = "";
+            for (int i = 0; i < noOfZeroToBeAdded; i++)
+            {
+                noOfZero += "0";
+            }
+
+            return noOfZero + countDeptStd;
+        }
         /*
          * Item setup code ends here
          */
@@ -146,6 +158,18 @@ namespace PointOfSaleMVC.Manager
         {
             return setupGateway.GetBranches();
         }
+        public string GetOrganizationCode(Organization organization)
+        {
+            int countDeptStd = setupGateway.GetOrganizationCode(organization) + 1;
+            int noOfZeroToBeAdded = 4 - countDeptStd.ToString().Length;
+            string noOfZero = "";
+            for (int i = 0; i < noOfZeroToBeAdded; i++)
+            {
+                noOfZero += "0";
+            }
+
+            return noOfZero + countDeptStd;
+        }
         /*
          * Outlet/ Branch setup code ends here
          */
@@ -200,5 +224,8 @@ namespace PointOfSaleMVC.Manager
         {
             return setupGateway.GetAllEmployees();
         }
+
+
+
     }
 }

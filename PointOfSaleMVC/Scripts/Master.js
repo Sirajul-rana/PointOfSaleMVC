@@ -209,12 +209,12 @@
             $.each(data, function (i, val) {
                 tblHtml += "<tr><td></td><td>" + val.Category.CategoryName + "</td>";
                 tblHtml += "<td>" + val.ItemName + "</td>";
-                tblHtml += "<td>" + val.ItemCode + "</td>";
+                tblHtml += "<td>" + val.Category.CategoryCode+"-"+val.ItemCode + "</td>";
                 tblHtml += "<td>" + val.ItemDescription + "</td>";
                 tblHtml += "<td>" + val.CostPrice + " tk</td>";
                 tblHtml += "<td>" + val.SalePrice + " tk</td>";
-                tblHtml += '<td><button type="button" id="btnEdit" class="btn btn-primary btnEdit"><i class="fa fa-edit"></i></button>';
-                tblHtml += '<button type="button" class="btn btn-danger btnDelete" id="btnDelete"><i class="fa fa-remove"></i></button></td></tr>';
+                tblHtml += '<td><button type="button" id="btnEdit" class="btn btn-primary"><i class="fa fa-edit"></i></button>';
+                tblHtml += '<button type="button" class="btn btn-danger" id="btnDelete"><i class="fa fa-remove"></i></button></td></tr>';
             });
 
             $("#itemTableBody").html(tblHtml);
@@ -231,8 +231,30 @@
     });
 
     $("#CategoryId").change(function () {
-        var code = ($("#CategoryId option:selected").html()).slice(0, 3);
-        $("#ItemCode").val(code.toLocaleUpperCase());
+        if ($("#CategoryId").val() === "") {
+            $("#CategoryCode").val("");
+            $("#ItemCode").val("");
+        } else {
+            var code = ($("#CategoryId option:selected").html()).slice(0, 3);
+            var categoryId = $("#CategoryId").val();
+            $("#CategoryCode").val(code.toLocaleUpperCase());
+            $.post("/Setup/GetItemCode/",
+                {
+                    CategoryId: categoryId
+                },
+                function (data, status) {
+                    if (status === "success") {
+                        $("#ItemCode").val(data);
+                    } else {
+                        loadCategoryTable();
+                        alertify.error("Data: " + data + "\nStatus: " + status);
+                    }
+
+                });
+
+        }
+
+
     });
 
     $("#saveItemForm").validate({
@@ -478,6 +500,12 @@
             $("#organizationTableBody").html(tblHtml);
         });
     }
+
+    $("#OrganizationName").change(function () {
+        var code = ($("#OrganizationName").val()).slice(0, 3);
+        $("#OrganizationCode").val(code.toLocaleUpperCase());
+    });
+
     $("#saveOrganizationForm").validate({
         rules: {
             OrganizationName: {
@@ -556,6 +584,30 @@
     /*
      * Outlet/ Branch setup code starts here
      */
+    $("#OrganizationId").change(function () {
+        if ($("#OrganizationId").val() === "") {
+            $("#OrganizationCode").val("");
+        } else {
+            var organizationId = $("#OrganizationId").val();
+            $.post("/Setup/GetOrganizationCode/",
+                {
+                    OrganizationId: organizationId
+                },
+                function (data, status) {
+                    if (status === "success") {
+                        $("#BranchCode").val(data);
+                    } else {
+                        loadCategoryTable();
+                        alertify.error("Data: " + data + "\nStatus: " + status);
+                    }
+
+                });
+
+        }
+
+
+    });
+
     $("#saveBranchForm").validate({
         rules: {
             OrganizationId: {
@@ -598,7 +650,7 @@
             $.each(data, function (i, val) {
                 tblHtml += "<tr><td></td><td>" + val.Organization.OrganizationName + "</td>";
                 tblHtml += "<td>" + val.BranchName + "</td>";
-                tblHtml += "<td>" + val.BranchCode + "</td>";
+                tblHtml += "<td>" + val.Organization.OrganizationCode + "-"+ val.BranchCode + "</td>";
                 tblHtml += "<td>" + val.BranchContactNo + "</td>";
                 tblHtml += "<td>" + val.BranchAddress + "</td>";
                 tblHtml += '<td><button type="button" id="btnEdit" class="btn btn-primary btnEdit"><i class="fa fa-edit"></i></button>';
@@ -990,5 +1042,20 @@
     });
     /*
      * Employee setup code ends here
+     */
+
+    /*
+     * Sale operation code starts here
+     */
+    $("#SaleDate").datepicker({
+        changeMonth: true,
+        changeYear: true,
+        dateFormat: "yy-mm-dd"
+
+    }).datepicker("setDate", "0");
+
+
+    /*
+     * Sale operation code ends here
      */
 });
