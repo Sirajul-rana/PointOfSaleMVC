@@ -209,7 +209,7 @@
             $.each(data, function (i, val) {
                 tblHtml += "<tr><td></td><td>" + val.Category.CategoryName + "</td>";
                 tblHtml += "<td>" + val.ItemName + "</td>";
-                tblHtml += "<td>" + val.Category.CategoryCode+"-"+val.ItemCode + "</td>";
+                tblHtml += "<td>" + val.Category.CategoryCode + "-" + val.ItemCode + "</td>";
                 tblHtml += "<td>" + val.ItemDescription + "</td>";
                 tblHtml += "<td>" + val.CostPrice + " tk</td>";
                 tblHtml += "<td>" + val.SalePrice + " tk</td>";
@@ -650,7 +650,7 @@
             $.each(data, function (i, val) {
                 tblHtml += "<tr><td></td><td>" + val.Organization.OrganizationName + "</td>";
                 tblHtml += "<td>" + val.BranchName + "</td>";
-                tblHtml += "<td>" + val.Organization.OrganizationCode + "-"+ val.BranchCode + "</td>";
+                tblHtml += "<td>" + val.Organization.OrganizationCode + "-" + val.BranchCode + "</td>";
                 tblHtml += "<td>" + val.BranchContactNo + "</td>";
                 tblHtml += "<td>" + val.BranchAddress + "</td>";
                 tblHtml += '<td><button type="button" id="btnEdit" class="btn btn-primary btnEdit"><i class="fa fa-edit"></i></button>';
@@ -813,6 +813,13 @@
         $("#PartyEmail").val("");
         $("#PartyAddress").val("");
         alertify.error("All Cleared");
+    });
+
+
+    $("#partyTable tbody").on("click", ".btnDelete", function (e) {
+        e.preventDefault();
+        var periodStart = $(this).closest('tr').children('td:eq(1)').text();
+        alert(periodStart);
     });
     /*
      * Party setup code ends here
@@ -1045,6 +1052,177 @@
      */
 
     /*
+     * Purchase operation code starts here
+     */
+    $("#PurchaseDateTime").datepicker({
+        changeMonth: true,
+        changeYear: true,
+        dateFormat: "yy-mm-dd"
+
+    }).datepicker("setDate", "0");
+
+    $("#BranchId").change(function () {
+        if ($("#BranchId").val() === "") {
+            $("#EmployeeId").find('option:not(:first)').remove();
+        } else {
+            var branchId = $("#BranchId").val();
+            $.post("/Operation/GetEmployees/",
+                {
+                    branchId: branchId
+                },
+                function (data, status) {
+                    if (status === "success") {
+                        var markup = "<option value=''>Select Employee</option>";
+                        $.each(data, function (i, val) {
+                            markup += "<option value=" + val.EmployeeId + ">" + val.EmployeeName + "</option>";
+                        });
+                        //for (var x = 0; x < data.length; x++) {
+                        //    markup += "<option value=" + data[x].Value + ">" + data[x].Text + "</option>";
+                        //}
+                        $("#EmployeeId").html(markup).show();
+                    } else {
+                        alertify.error("Data: " + data + "\nStatus: " + status);
+                    }
+
+                });
+        }
+
+    });
+
+    $("#Item_ItemName").autocomplete({
+        source: function (request, response) {
+            $.post("/Operation/GetItems/",
+                {
+                    itemName: request.term
+                },
+                function (data, status) {
+                    if (status === "success") {
+                        response($.map(data, function (item) {
+                            return item;
+                        }));
+                    } else {
+                        alertify.error("Data: " + data + "\nStatus: " + status);
+                    }
+
+                });
+        },
+        select: function (e, i) {
+            $("#Item_CostPrice").val(i.item.cost);
+        }
+    });
+    var listOfPurchaseItem = [];
+
+    $("#addPurchaseItemForm").validate({
+        rules: {
+            ItemName: {
+                required: true
+            },
+            Quantity: {
+                required: true
+            },
+            CostPrice: {
+                required: true
+            }
+        },
+        messages: {
+            ItemName: {
+                required: "Please enter item name"
+            },
+            Quantity: {
+                required: "Please enter item quantity"
+            },
+            CostPrice: {
+                required: "Please enter item cost price"
+            }
+        }
+    });
+    $("#addPurchaseItemButton").click(function () {
+        
+        if ($("#addPurchaseItemForm").valid()) {
+            var itemName = $("#Item_ItemName").val();
+            var qty = $("#Quantity").val();
+            var price = $("#Item_CostPrice").val();
+            var anItem = {};
+
+            if (typeof listOfPurchaseItem !== 'undefined' && listOfPurchaseItem.length > 0) {
+                // the array is defined and has at least one element
+                var found = listOfPurchaseItem.some(function (el) {
+                    if (el.ItemName === itemName) {
+                        el.Quantity = parseInt(el.Quantity) + parseInt(qty);
+                        return true;
+                    }
+
+                });
+                if (!found) {
+                    anItem = {
+                        ItemName: itemName,
+                        Quantity: qty,
+                        Price: price
+                    };
+                    listOfPurchaseItem.push(anItem);
+                }
+            } else {
+                anItem = {
+                    ItemName: itemName,
+                    Quantity: qty,
+                    Price: price
+                };
+                listOfPurchaseItem.push(anItem);
+            }
+
+
+
+            var tblHtml = "";
+            $.each(listOfPurchaseItem, function (i, val) {
+                tblHtml += "<tr><td></td><td>" + val.ItemName + "</td>";
+                tblHtml += "<td>" + val.Quantity + "</td>";
+                tblHtml += "<td>" + val.Price + "</td>";
+                tblHtml += "<td>" + val.Quantity * parseFloat(val.Price).toFixed(2) + "</td>";
+                tblHtml += '<td><button type="button" id="btnEdit" class="btn btn-primary btnEdit"><i class="fa fa-edit"></i></button>';
+                tblHtml += '<button type="button" class="btn btn-danger btnDelete" id="btnDelete"><i class="fa fa-remove"></i></button></td></tr>';
+            });
+            var sum = 0.0;
+            $.each(listOfPurchaseItem, function (i, val) {
+                sum += (val.Quantity * parseFloat(val.Price).toFixed(2));
+            });
+            $("#purchaseTableBody").html(tblHtml);
+            $("#PurchaseTransaction_Total").val(sum);
+            $("#Item_ItemName").val("");
+            $("#Quantity").val("1");
+            $("#Item_CostPrice").val("");
+        }
+    });
+    $('#PurchaseTransaction_Paid').keyup(function (e) {
+        var total = $("#PurchaseTransaction_Total").val();
+        var paidAmount = $("#PurchaseTransaction_Paid").val();
+        var returnAmount = paidAmount - total;
+        $('#PurchaseTransaction_Return').val(returnAmount);
+    });
+
+    $("#deletePurchasetemButton").click(function () {
+        $("#Item_ItemName").val("");
+        $("#Quantity").val("1");
+        $("#Item_CostPrice").val("");
+
+    });
+    $("#purchaseTable").on("click", ".btnDelete", function (e) {
+        e.preventDefault();
+        var selectedName = $(this).closest('tr').children('td:eq(1)').text();
+
+        $.each(listOfPurchaseItem, function (i, val) {
+            if (val.ItemName === selectedName) {
+                var newTotal = $("#PurchaseTransaction_Total").val() - val.Price;
+                $("#PurchaseTransaction_Total").val(newTotal);
+                listOfPurchaseItem.splice($.inArray(selectedName, listOfPurchaseItem), 1);
+
+            }
+        });
+        $(this).parents("tr").remove();
+    });
+    /*
+     * Purchase operation code ends here
+     */
+    /*
      * Sale operation code starts here
      */
     $("#SaleDate").datepicker({
@@ -1054,7 +1232,100 @@
 
     }).datepicker("setDate", "0");
 
+    $("#Name").autocomplete({
+        source: function (request, response) {
+            $.post("/Operation/GetItems/",
+                {
+                    itemName: request.term
+                },
+                function (data, status) {
+                    if (status === "success") {
+                        response($.map(data, function (item) {
+                            return item;
+                        }));
+                    } else {
+                        alertify.error("Data: " + data + "\nStatus: " + status);
+                    }
 
+                });
+        },
+        select: function (e, i) {
+            $("#Price").val(i.item.sale);
+        }
+    });
+    var listOfItem = [];
+
+    $("#addItemButton").click(function () {
+        var itemName = $("#Name").val();
+        var qty = $("#Quantity").val();
+        var price = $("#Price").val();
+        var anItem = {};
+        if (typeof listOfItem !== 'undefined' && listOfItem.length > 0) {
+            // the array is defined and has at least one element
+            var found = listOfItem.some(function (el) {
+                if (el.ItemName === itemName) {
+                    el.Quantity = parseInt(el.Quantity) + parseInt(qty);
+                    return true;
+                }
+
+            });
+            if (!found) {
+                anItem = {
+                    ItemName: itemName,
+                    Quantity: qty,
+                    Price: price
+                };
+                listOfItem.push(anItem);
+            }
+        } else {
+            anItem = {
+                ItemName: itemName,
+                Quantity: qty,
+                Price: price
+            };
+            listOfItem.push(anItem);
+        }
+        //var anItem = {
+        //    ItemName: itemName,
+        //    Quantity: qty,
+        //    Price: price
+        //};
+        //listOfItem.push(anItem);
+
+        var tblHtml = "";
+        $.each(listOfItem, function (i, val) {
+            tblHtml += "<tr><td></td><td>" + val.ItemName + "</td>";
+            tblHtml += "<td>" + val.Quantity + "</td>";
+            tblHtml += "<td>" + val.Price + "</td>";
+            tblHtml += "<td>" + val.Quantity * parseFloat(val.Price).toFixed(2) + "</td>";
+            tblHtml += '<td><button type="button" id="btnEdit" class="btn btn-primary btnEdit"><i class="fa fa-edit"></i></button>';
+            tblHtml += '<button type="button" class="btn btn-danger btnDelete" id="btnDelete"><i class="fa fa-remove"></i></button></td></tr>';
+        });
+
+        $("#salesTableBody").html(tblHtml);
+        var sum = 0.00;
+        $.each(listOfItem, function (i, val) {
+            sum += (val.Quantity * parseFloat(val.Price).toFixed(2));
+        });
+        $("#total").text(sum);
+        $("#Name").val("");
+        $("#Quantity").val("");
+        $("#Price").val("");
+    });
+
+    $("#salesTable").on("click", ".btnDelete", function (e) {
+        e.preventDefault();
+        var selectedName = $(this).closest('tr').children('td:eq(1)').text();
+
+        $.each(listOfItem, function (i, val) {
+            if (val.ItemName === selectedName) {
+                listOfItem.splice($.inArray(selectedName, listOfItem), 1);
+            }
+        });
+
+        $(this).parents("tr").remove();
+        $("#total").text("");
+    });
     /*
      * Sale operation code ends here
      */

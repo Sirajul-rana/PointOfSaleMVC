@@ -155,10 +155,14 @@
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\SetupController.cs" />
     <Compile Include="DBL\Gateway.cs" />
+    <Compile Include="DBL\PurchaseGateway.cs" />
+    <Compile Include="DBL\SalesGateway.cs" />
     <Compile Include="DBL\SetupGateway.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Manager\PurchaseManager.cs" />
+    <Compile Include="Manager\SalesManager.cs" />
     <Compile Include="Manager\SetupManager.cs" />
     <Compile Include="Models\Branch.cs" />
     <Compile Include="Models\Category.cs" />
@@ -168,6 +172,8 @@
     <Compile Include="Models\Organization.cs" />
     <Compile Include="Models\Party.cs" />
     <Compile Include="Models\PartyType.cs" />
+    <Compile Include="Models\PurchaseTransaction.cs" />
+    <Compile Include="Models\StockIn.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -329,6 +335,7 @@
     <Content Include="Views\Setup\EmployeeSetup.cshtml" />
     <Content Include="Views\Setup\ViewEmployees.cshtml" />
     <Content Include="Views\Operation\SalesOperation.cshtml" />
+    <Content Include="Views\Operation\PurchaseOperation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

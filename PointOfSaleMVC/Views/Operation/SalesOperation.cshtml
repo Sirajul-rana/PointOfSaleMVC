@@ -4,7 +4,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Sales Operation</h2>
+<h5 style="text-align: center">Sales Operation</h5>
 <hr class="my-4" />
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "saveSalesForm", name = "saveSalesForm" }))
 {
@@ -13,14 +13,14 @@
     <div class="form-horizontal">
 
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="row">
+        <div class="row" style="margin-left: 0px;margin-right: 0px">
             <div class="col-md-8">
-                <div class="row"style="border: 2px solid #18BC9C;border-radius:5px">
-                    <table >
+                <div class="row" style="border: 2px solid #18BC9C;border-radius:5px">
+                    <table>
                         <tr>
                             <td>
                                 <div class="form-group">
-                                    @Html.Label("Item Name/Bar Code", new { @class = "control-label col-md-10" })
+                                    @Html.Label("Item Name", new { @class = "control-label col-md-10" })
                                     <div class="col-md-10">
                                         @Html.TextBox("Name", null, new { @class = "form-control" })
                                         @Html.ValidationMessage("Name", "", new { @class = "text-danger" })
@@ -40,26 +40,28 @@
                                 <div class="form-group">
                                     @Html.Label("Price", htmlAttributes: new { @class = "control-label col-md-10" })
                                     <div class="col-md-10">
-                                        @Html.TextBox("Price", null, new { @class = "form-control" })
+                                        @Html.TextBox("Price", null, new { @class = "form-control", @readonly = "readonly" })
                                         @Html.ValidationMessage("Price", "", new { @class = "text-danger" })
                                     </div>
                                 </div>
                             </td>
-                        </tr>
-                        <tr>
                             <td>
                                 <div class="form-group">
                                     @Html.Label("Stock Qty", htmlAttributes: new { @class = "control-label col-md-10" })
                                     <div class="col-md-10">
-                                        @Html.TextBox("StockQuantity", null, new { @class = "form-control" })
+                                        @Html.TextBox("StockQuantity", null, new { @class = "form-control", @readonly = "readonly" })
                                         @Html.ValidationMessage("StockQuantity", "", new { @class = "text-danger" })
                                     </div>
                                 </div>
                             </td>
+                        </tr>
+                        <tr>
+                            <td></td>
                             <td></td>
                             <td></td>
                         </tr>
                         <tr>
+                            <td></td>
                             <td></td>
                             <td></td>
                             <td>
@@ -68,9 +70,9 @@
                         </tr>
                     </table>
                 </div>
-                <br/>
+                <br />
                 <div class="row">
-                    <table class="table table-bordered table-hover table-striped table-light css-serial">
+                    <table class="table table-bordered table-hover table-striped table-light css-serial" id="salesTable" style="border: none">
                         <tr class="thead-dark">
                             <th>
                                 SL
@@ -78,9 +80,9 @@
                             <th>
                                 @Html.DisplayName("Item")
                             </th>
-                            <th>
-                                @Html.DisplayName("Code")
-                            </th>
+                            @*<th>
+                                    @Html.DisplayName("Code")
+                                </th>*@
                             <th>
                                 @Html.DisplayName("Quantity")
                             </th>
@@ -90,90 +92,132 @@
                             <th>
                                 @Html.DisplayName("Line Total")
                             </th>
+                            <th>
+                                @Html.DisplayName("Action")
+                            </th>
                         </tr>
 
                         <tbody id="salesTableBody"></tbody>
                         <tfoot>
-                        <tr>
-                            <td id="removeSerial"></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>Total</td>
-                            <td>2500</td>
-                        </tr>
+                            <tr>
+                                <td id="removeSerial" style="border: none"></td>
+                                <td style="border: none"></td>
+                                <td style="border: none"></td>
+                                <td>Total</td>
+                                <td id="total"></td>
+                            </tr>
                         </tfoot>
                     </table>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="row" style="border: 2px solid #18BC9C;border-radius:5px">
-                    <div class="col-md" >
-                        <div class="form-group">
-                            @Html.Label("Branch", htmlAttributes: new { @class = "control-label col-md-10" })
-                            <div class="col-md-10">
-                                @Html.DropDownList("Branch", (SelectList)ViewBag.DropdownBranches, "Select Branch", new { @class = "form-control" })
-                                @Html.ValidationMessage("Branch", "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            @Html.Label("Name", htmlAttributes: new { @class = "control-label col-md-10" })
-                            <div class="col-md-10">
-                                @Html.TextBox("EmployeeName", null, new { @class = "form-control" })
-                                @Html.ValidationMessage("EmployeeName", "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            @Html.Label("Sale Date", htmlAttributes: new { @class = "control-label col-md-10" })
-                            <div class="col-md-10">
-                                @Html.TextBox("SaleDate", null, new { @class = "form-control" })
-                                @Html.ValidationMessage("SaleDate", "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-                    </div>
-                    
-                </div>
+            <div class="col-md-4">
                 <div class="row" style="border: 2px solid #18BC9C;border-radius:5px">
                     <div class="col-md">
                         <div class="form-group">
-                            @Html.Label("Coustomer Contact", htmlAttributes: new { @class = "control-label col-md-10" })
-                            <div class="col-md-10">
-                                @Html.TextBox("CoustomerContact", null, new { @class = "form-control" })
-                                @Html.ValidationMessage("CoustomerContact", "", new { @class = "text-danger" })
+                            <div class="row">
+                                <div class="col-md-5">
+                                    @Html.Label("Branch", htmlAttributes: new { @class = "control-label" })
+                                </div>
+                                <div class="col-md-7">
+                                    @Html.DropDownList("BranchId", (SelectList)ViewBag.DropdownBranches, "Select Branch", new { @class = "form-control" })
+                                    @Html.ValidationMessage("BranchId", "", new { @class = "text-danger" })
+                                </div>
                             </div>
                         </div>
                         <div class="form-group">
-                            @Html.Label("Coustomer Name", htmlAttributes: new { @class = "control-label col-md-10" })
-                            <div class="col-md-10">
-                                @Html.TextBox("CoustomerName", null, new { @class = "form-control" })
-                                @Html.ValidationMessage("CoustomerName", "", new { @class = "text-danger" })
+                            <div class="row">
+                                <div class="col-md-5">
+                                    @Html.Label("Employee", htmlAttributes: new { @class = "control-label" })
+                                </div>
+                                <div class="col-md-7">
+                                    @Html.DropDownList("EmployeeId", new SelectList(Enumerable.Empty<SelectListItem>(), "EmployeeId", "EmployeeName"), "Select Employee", new { @class = "form-control" })
+                                    @Html.ValidationMessage("EmployeeId", "", new { @class = "text-danger" })
+                                </div>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    @Html.Label("Date", htmlAttributes: new { @class = "control-label" })
+                                </div>
+                                <div class="col-md-7">
+                                    @Html.TextBox("SaleDate", null, new { @class = "form-control" })
+                                    @Html.ValidationMessage("SaleDate", "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row" style="border: 2px solid #18BC9C;border-radius:5px">
+                    <div class="col-md">
+                        <fieldset>
+                            <legend>Customer</legend>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        @Html.Label("Name", htmlAttributes: new { @class = "control-label" })
+                                    </div>
+                                    <div class="col-md-7">
+                                        @Html.TextBox("CoustomerName", null, new { @class = "form-control" })
+                                        @Html.ValidationMessage("CoustomerName", "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        @Html.Label("Contact", htmlAttributes: new { @class = "control-label" })
+                                    </div>
+                                    <div class="col-md-7">
+                                        @Html.TextBox("CoustomerContact", null, new { @class = "form-control" })
+                                        @Html.ValidationMessage("CoustomerContact", "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+
                     </div>
                 </div>
                 <div class="row" style="border: 2px solid #18BC9C;border-radius:5px">
                     <div class="col-md">
-                        <div class="form-group">
-                            @Html.Label("Sub Total", htmlAttributes: new { @class = "col-md-10" })
-                            <div class="col-md-10">
-                                @Html.TextBox("SubTotal", null, new { @class = "form-control" })
-                                @Html.ValidationMessage("SubTotal", "", new { @class = "text-danger" })
+                        <fieldset>
+                            <legend>Sales Summary</legend>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        @Html.Label("Sub Total", htmlAttributes: new { @class = "control-label" })
+                                    </div>
+                                    <div class="col-md-7">
+                                        @Html.TextBox("SubTotal", null, new { @class = "form-control" })
+                                        @Html.ValidationMessage("SubTotal", "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            @Html.Label("VAT", htmlAttributes: new { @class = "control-label col-md-10" })
-                            <div class="col-md-10">
-                                @Html.TextBox("Vat", null, new { @class = "form-control" })
-                                @Html.ValidationMessage("Vat", "", new { @class = "text-danger" })
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        @Html.Label("VAT", htmlAttributes: new { @class = "control-label" })
+                                    </div>
+                                    <div class="col-md-7">
+                                        @Html.TextBox("Vat", null, new { @class = "form-control" })
+                                        @Html.ValidationMessage("Vat", "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            @Html.Label("Discount", htmlAttributes: new { @class = "control-label col-md-10" })
-                            <div class="col-md-10">
-                                @Html.TextBox("Discount", null, new { @class = "form-control" })
-                                @Html.ValidationMessage("Discount", "", new { @class = "text-danger" })
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        @Html.Label("Discount", htmlAttributes: new { @class = "control-label" })
+                                    </div>
+                                    <div class="col-md-7">
+                                        @Html.TextBox("Discount", null, new { @class = "form-control" })
+                                        @Html.ValidationMessage("Discount", "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                        </fieldset>
+
                     </div>
                 </div>
                 <div class="row">
@@ -187,17 +231,23 @@
                             </th>
                         </tr>
                         <tbody>
-                        <tr>
-                            <td>1000</td>
-                            <td>500</td>
-                        </tr>
+                            <tr>
+                                <td>1000</td>
+                                <td>500</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
                 <div class="row">
-                    <input type="button" value="Save" id="saveSaleButton" name="saveSaleButton" class="btn btn-success" />
+                    <input type="button" value="Save" id="saveSaleButton" name="saveSaleButton" class="btn btn-success" style="margin-right: 3px" />
+                    <input type="button" value="Cancel" id="cancelSaleButton" name="cancelSaleButton" class="btn btn-danger" />
                 </div>
             </div>
         </div>
     </div>
 }
+
+@*<div class="row">
+        <div class="col-md-5"></div>
+        <div class="col-md-7"></div>
+    </div>*@

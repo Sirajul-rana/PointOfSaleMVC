@@ -25,11 +25,11 @@ namespace PointOfSaleMVC.Models
         public string ItemDescription { get; set; }
         [Required(ErrorMessage = "Please enter purchase price")]
         [RegularExpression(@"(\d+[\/\d. ]*|\d)", ErrorMessage = "Enter a valid price")]
-        [Range(0, 100, ErrorMessage = "Price must be greater than 0")]
+        [Range(0, Int32.MaxValue, ErrorMessage = "Price must be greater than 0")]
         [DisplayName(displayName: "Purchase Price")]
         public decimal CostPrice { get; set; }
         [Required(ErrorMessage = "Please enter sale price")]
-        [Range(0, 100, ErrorMessage = "Price must be greater than 0")]
+        [Range(0, Int32.MaxValue, ErrorMessage = "Price must be greater than 0")]
         [DisplayName(displayName: "Sale Price")]
         public decimal SalePrice { get; set; }
 

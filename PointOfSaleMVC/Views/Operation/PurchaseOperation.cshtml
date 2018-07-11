@@ -1,0 +1,187 @@
+﻿@model PointOfSaleMVC.Models.StockIn
+@{
+    ViewBag.Title = "PurchaseOperation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h5 style="text-align: center">Purchase Operation</h5>
+<hr class="my-4" />
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "addPurchaseItemForm", name = "addPurchaseItemForm" }))
+{
+    @Html.AntiForgeryToken()
+
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="row" style="margin-left: 0px;margin-right: 0px">
+        <div id="tableAdd" class="row" style="border: 2px solid #18BC9C; border-radius: 5px;margin-left: 0px; margin-right: 0px; margin-bottom: 10px;">
+            <table>
+                <tr>
+                    <td>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Item.ItemName, new { @class = "control-label col-md-10" })
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(model => model.Item.ItemName, null, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Item.ItemName, null, new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Quantity, htmlAttributes: new { @class = "control-label col-md-10" })
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(model => model.Quantity, null, new { @class = "form-control", @Value = "1" })
+                                @Html.ValidationMessageFor(model => model.Quantity, null, new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Item.CostPrice, htmlAttributes: new { @class = "control-label col-md-10" })
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(model => model.Item.CostPrice, null, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Item.CostPrice, null, new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <br />
+                        @*<button type="button" id="addPurchaseItemButton" name="addPurchaseItemButton" class="btn btn-success"><i class="fa fa-plus"></i></button>
+                            <button type="button" id="deletePurchasetemButton" name="deletePurchasetemButton" class="btn btn-danger"><i class="fa fa-remove"></i></button>*@
+                        <input type="button" value="Add" id="addPurchaseItemButton" name="addPurchaseItemButton" class="btn btn-success" />
+                        <input type="button" value="Delete" id="deletePurchasetemButton" name="deletePurchasetemButton" class="btn btn-danger" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <br />
+
+    </div>
+}
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "savePurchaseForm", name = "savePurchaseForm" }))
+{
+    <div class="row" style="margin-left: 0px;margin-right: 0px">
+        <div class="col-md-8">
+            <div class="row">
+                <table class="table table-bordered table-hover table-striped table-light css-serial" id="purchaseTable" style="border: none">
+                    <tr class="thead-dark">
+                        <th>
+                            SL
+                        </th>
+                        <th>
+                            @Html.DisplayName("Item")
+                        </th>
+                        @*<th>
+                                @Html.DisplayName("Code")
+                            </th>*@
+                        <th>
+                            @Html.DisplayName("Quantity")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Price")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Line Total")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Action")
+                        </th>
+                    </tr>
+
+                    <tbody id="purchaseTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="row" style="border: 2px solid #18BC9C; border-radius: 5px;">
+                <div class="col-md" style="margin-top: 10px">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-5">
+                                @Html.LabelFor(model => model.BranchId, htmlAttributes: new { @class = "control-label" })
+                            </div>
+                            <div class="col-md-7">
+                                @Html.DropDownListFor(model => model.BranchId, (SelectList)ViewBag.DropdownBranches, "Select Branch", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.BranchId, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-5">
+                                @Html.LabelFor(model => model.PartyId, htmlAttributes: new { @class = "control-label" })
+                            </div>
+                            <div class="col-md-7">
+                                @Html.DropDownListFor(model => model.PartyId, (SelectList)ViewBag.DropdownSuppliers, "Select Supplier", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.PartyId, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-5">
+                                @Html.LabelFor(model => model.EmployeeId, htmlAttributes: new { @class = "control-label" })
+                            </div>
+                            <div class="col-md-7">
+                                @Html.DropDownListFor(model => model.EmployeeId, new SelectList(Enumerable.Empty<SelectListItem>(), "EmployeeId", "EmployeeName"), "Select Employee", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.EmployeeId, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-5">
+                                @Html.LabelFor(model => model.PurchaseDateTime, htmlAttributes: new { @class = "control-label" })
+                            </div>
+                            <div class="col-md-7">
+                                @Html.TextBoxFor(model => model.PurchaseDateTime, null, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.PurchaseDateTime, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="border: 2px solid #18BC9C; border-radius: 5px;">
+                <div class="col-md" style="margin-top: 10px">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-5">
+                                @Html.LabelFor(model => model.PurchaseTransaction.Total, htmlAttributes: new { @class = "control-label" })
+                            </div>
+                            <div class="col-md-7">
+                                @Html.TextBoxFor(model => model.PurchaseTransaction.Total, null, new { @class = "form-control",@Value="0" })
+                                @Html.ValidationMessageFor(model => model.PurchaseTransaction.Total, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-5">
+                                @Html.LabelFor(model => model.PurchaseTransaction.Paid, htmlAttributes: new { @class = "control-label" })
+                            </div>
+                            <div class="col-md-7">
+                                @Html.TextBoxFor(model => model.PurchaseTransaction.Paid, null, new { @class = "form-control", @Value = "0" })
+                                @Html.ValidationMessageFor(model => model.PurchaseTransaction.Paid, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-5">
+                                @Html.LabelFor(model => model.PurchaseTransaction.Return, htmlAttributes: new { @class = "control-label" })
+                            </div>
+                            <div class="col-md-7">
+                                @Html.TextBoxFor(model => model.PurchaseTransaction.Return, null, new { @class = "form-control", @Value = "0" })
+                                @Html.ValidationMessageFor(model => model.PurchaseTransaction.Return, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <input type="button" value="Save" id="savePurchaseButton" name="savePurchaseButton" class="btn btn-success" style="margin-right: 3px; margin-left: 10px;margin-bottom: 5px" />
+                        <input type="button" value="Delete" id="cancelPurchaseButton" name="cancelPurchaseButton" class="btn btn-danger" style="margin-bottom: 5px"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

@@ -457,6 +457,26 @@ namespace PointOfSaleMVC.DBL
             gateway.Connection.Close();
             return rowAffected;
         }
+        public List<Party> GetParties()
+        {
+            List<Party> parties = new List<Party>();
+            string query = "SELECT P.PartyId, P.PartyName FROM Party P WHERE P.PartyTypeId = 2";
+
+            Gateway gateway = new Gateway(query);
+            SqlDataReader reader = gateway.SqlCommand.ExecuteReader();
+
+            while (reader.Read())
+            {
+                Party party = new Party();
+                party.PartyId = (int)reader["PartyId"];
+                party.PartyName = reader["PartyName"].ToString();
+                parties.Add(party);
+            }
+
+            reader.Close();
+            gateway.Connection.Close();
+            return parties;
+        }
         /*
          * Party setup code ends here
          */

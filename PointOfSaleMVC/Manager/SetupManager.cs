@@ -197,6 +197,10 @@ namespace PointOfSaleMVC.Manager
                 return "Adding failed";
             }
         }
+        public List<Party> GetParties()
+        {
+            return setupGateway.GetParties();
+        }
         /*
          * Party setup code ends here
          */
@@ -215,17 +219,13 @@ namespace PointOfSaleMVC.Manager
                 return "Adding failed";
             }
         }
-        /*
-         * Employee setup code ends here
-         */
-
-
         public List<Employee> GetAllEmployees()
         {
             return setupGateway.GetAllEmployees();
         }
-
-
-
+        /*
+         * Employee setup code ends here
+         */
+        
     }
 }
