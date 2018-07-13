@@ -14,5 +14,17 @@ namespace PointOfSaleMVC.Manager
         {
             return purchaseGateway.GetEmployees(branchId);
         }
+
+        public string SaveStockIn(StockIn stockIn)
+        {
+            if (purchaseGateway.SaveStockIn(stockIn) > 0)
+            {
+                return "Stock in successfull";
+            }
+            else
+            {
+                return "Stock in failed";
+            }
+        }
     }
 }

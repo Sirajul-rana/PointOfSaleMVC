@@ -25,6 +25,13 @@ namespace PointOfSaleMVC.Controllers
             return View();
 
         }
+
+        [HttpPost]
+        public ActionResult SaveStockIn(StockIn stockIn)
+        {
+            string msg = purchaseManager.SaveStockIn(stockIn);
+            return Json(msg, JsonRequestBehavior.AllowGet);
+        }
         [HttpPost]
         public ActionResult GetEmployees(int branchId)
         {
@@ -54,7 +61,8 @@ namespace PointOfSaleMVC.Controllers
                              label = item.ItemName,
                              value = item.ItemName,
                              sale = item.SalePrice.ToString(),
-                             cost = item.CostPrice
+                             cost = item.CostPrice,
+                             id = item.ItemId
                          }).ToList(); ;
             return Json(items, JsonRequestBehavior.AllowGet);
         }

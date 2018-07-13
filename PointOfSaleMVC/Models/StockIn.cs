@@ -27,10 +27,6 @@ namespace PointOfSaleMVC.Models
         [DisplayName("Date")]
         public DateTime PurchaseDateTime { get; set; }
 
-        [Required(ErrorMessage = "Please enter a quantity")]
-        [DisplayName("Qty")]
-        public int Quantity { get; set; }
-
         public PurchaseTransaction PurchaseTransaction { get; set; }
         public Branch Branch { get; set; }
         public Party Party { get; set; }

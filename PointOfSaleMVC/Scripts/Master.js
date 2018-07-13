@@ -1107,6 +1107,7 @@
                 });
         },
         select: function (e, i) {
+            $("#Item_ItemId").val(i.item.id);
             $("#Item_CostPrice").val(i.item.cost);
         }
     });
@@ -1137,11 +1138,13 @@
         }
     });
     $("#addPurchaseItemButton").click(function () {
-        
+
         if ($("#addPurchaseItemForm").valid()) {
             var itemName = $("#Item_ItemName").val();
-            var qty = $("#Quantity").val();
+            var qty = $("#Item_Quantity").val();
             var price = $("#Item_CostPrice").val();
+            var id = $('#Item_ItemId').val();
+
             var anItem = {};
 
             if (typeof listOfPurchaseItem !== 'undefined' && listOfPurchaseItem.length > 0) {
@@ -1157,7 +1160,8 @@
                     anItem = {
                         ItemName: itemName,
                         Quantity: qty,
-                        Price: price
+                        Price: price,
+                        ItemId: id
                     };
                     listOfPurchaseItem.push(anItem);
                 }
@@ -1165,8 +1169,10 @@
                 anItem = {
                     ItemName: itemName,
                     Quantity: qty,
-                    Price: price
+                    Price: price,
+                    ItemId: id
                 };
+
                 listOfPurchaseItem.push(anItem);
             }
 
@@ -1174,6 +1180,7 @@
 
             var tblHtml = "";
             $.each(listOfPurchaseItem, function (i, val) {
+
                 tblHtml += "<tr><td></td><td>" + val.ItemName + "</td>";
                 tblHtml += "<td>" + val.Quantity + "</td>";
                 tblHtml += "<td>" + val.Price + "</td>";
@@ -1188,10 +1195,125 @@
             $("#purchaseTableBody").html(tblHtml);
             $("#PurchaseTransaction_Total").val(sum);
             $("#Item_ItemName").val("");
-            $("#Quantity").val("1");
+            $("#Item_Quantity").val("1");
             $("#Item_CostPrice").val("");
         }
     });
+
+
+    $("#savePurchaseForm").validate({
+        rules: {
+            BranchId: {
+                required: true
+            },
+            PartyId: {
+                required: true
+            },
+            EmployeeId: {
+                required: true
+            },
+            PurchaseDateTime: {
+                required: true
+            },
+            PurchaseTransaction_Total: {
+                required: true
+            },
+            PurchaseTransaction_Paid: {
+                required: true
+            },
+            PurchaseTransaction_Return: {
+                required: true
+            }
+        },
+        messages: {
+            BranchId: {
+                required: "Please select an option"
+            },
+            PartyId: {
+                required: "Please select an option"
+            },
+            EmployeeId: {
+                required: "Please select an option"
+            },
+            PurchaseDateTime: {
+                required: "Please select an date"
+            },
+            PurchaseTransaction_Total: {
+                required: "Please enter party name"
+            },
+            PurchaseTransaction_Paid: {
+                required: "Please enter party name"
+            },
+            PurchaseTransaction_Return: {
+                required: "Please enter party name"
+            }
+        }
+    });
+    function showPurchaseResult(supplierName, branchName, purchaseDate, employeeName) {
+        $("#Supplier").val(supplierName);
+        $("#Branch").val(branchName);
+        $("#PurchaseDate").val(purchaseDate);
+        $("#PurchasedBy").val(employeeName);
+        $('#myModal').modal('show');
+
+        var tblHtml = "";
+        $.each(listOfPurchaseItem, function (i, val) {
+
+            tblHtml += "<tr><td></td><td>" + val.ItemName + "</td>";
+            tblHtml += "<td>" + val.Quantity + "</td>";
+            tblHtml += "<td>" + val.Price + "</td>";
+            tblHtml += "<td>" + val.Quantity * parseFloat(val.Price).toFixed(2) + "</td></tr>";
+        });
+        $("#purchaseResultTableBody").html(tblHtml);
+    };
+    $("#savePurchaseButton").click(function () {
+        if ($("#savePurchaseForm").valid()) {
+            var branchId = $("#BranchId").val();
+            var employeeId = $("#EmployeeId").val();
+            var partyId = $("#PartyId").val();
+            var purchaseDate = $("#PurchaseDateTime").val();
+            var total = $("#PurchaseTransaction_Total").val();
+            var paidAmount = $("#PurchaseTransaction_Paid").val();
+            var returnAmount = $("#PurchaseTransaction_Return").val();
+
+            var branchName = $("#BranchId option:selected").html();
+            var supplierName = $("#PartyId option:selected").html();
+            var employeeName = $("#EmployeeId option:selected").html();
+            
+            $.post("/Operation/SaveStockIn/",
+                {
+                    BranchId: branchId,
+                    EmployeeId: employeeId,
+                    PartyId: partyId,
+                    PurchaseDateTime: purchaseDate,
+                    PurchaseTransaction: {
+                        Total: total,
+                        Paid: paidAmount,
+                        Return: returnAmount
+                    },
+                    Items: listOfPurchaseItem
+                },
+                function (data, status) {
+                    if (status === "success") {
+                        showPurchaseResult(supplierName, branchName, purchaseDate, employeeName);
+                        $("#BranchId").prop('selectedIndex', 0);
+                        $("#EmployeeId").prop('selectedIndex', 0);
+                        $("#PartyId").prop('selectedIndex', 0);
+                        $("#PurchaseTransaction_Total").val("0");
+                        $("#PurchaseTransaction_Paid").val("0");
+                        $("#PurchaseTransaction_Return").val("0");
+                        $("#purchaseTableBody").empty();
+                        listOfPurchaseItem = [];
+
+                        alertify.success("Data: " + data + "\nStatus: " + status);
+                    } else {
+                        alertify.error("Data: " + data + "\nStatus: " + status);
+                    }
+
+                });
+        }
+    });
+
     $('#PurchaseTransaction_Paid').keyup(function (e) {
         var total = $("#PurchaseTransaction_Total").val();
         var paidAmount = $("#PurchaseTransaction_Paid").val();
@@ -1201,9 +1323,31 @@
 
     $("#deletePurchasetemButton").click(function () {
         $("#Item_ItemName").val("");
-        $("#Quantity").val("1");
+        $("#Item_Quantity").val("1");
         $("#Item_CostPrice").val("");
 
+    });
+    $("#cancelPurchaseButton").click(function () {
+        $("#BranchId").prop('selectedIndex', 0);
+        $("#EmployeeId").prop('selectedIndex', 0);
+        $("#PartyId").prop('selectedIndex', 0);
+        $("#PurchaseTransaction_Total").val("0");
+        $("#PurchaseTransaction_Paid").val("0");
+        $("#PurchaseTransaction_Return").val("0");
+        $("#purchaseTableBody").empty();
+        listOfPurchaseItem = [];
+    });
+
+    $("#closePurchaseResult").click(function () {
+        //$("#BranchId").prop('selectedIndex', 0);
+        //$("#EmployeeId").prop('selectedIndex', 0);
+        //$("#PartyId").prop('selectedIndex', 0);
+        //$("#PurchaseTransaction_Total").val("0");
+        //$("#PurchaseTransaction_Paid").val("0");
+        //$("#PurchaseTransaction_Return").val("0");
+        //$("#purchaseTableBody").empty();
+        //listOfPurchaseItem = [];
+        alertify.error("Print canceled");
     });
     $("#purchaseTable").on("click", ".btnDelete", function (e) {
         e.preventDefault();

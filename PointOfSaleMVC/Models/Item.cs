@@ -33,6 +33,9 @@ namespace PointOfSaleMVC.Models
         [DisplayName(displayName: "Sale Price")]
         public decimal SalePrice { get; set; }
 
+        [Required(ErrorMessage = "Please enter a quantity")]
+        [DisplayName("Qty")]
+        public int Quantity { get; set; }
         public Category Category { get; set; }
         //public string ImagePath { get; set; }
 
