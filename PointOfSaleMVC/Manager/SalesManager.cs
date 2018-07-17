@@ -14,5 +14,17 @@ namespace PointOfSaleMVC.Manager
         {
             return salesGateway.GetItems(itemName);
         }
+
+        public string SaveStockOut(StockOut stockOut)
+        {
+            if (salesGateway.SaveStockOut(stockOut) > 0)
+            {
+                return "Stock out successfull";
+            }
+            else
+            {
+                return "Stock out failed";
+            }
+        }
     }
 }

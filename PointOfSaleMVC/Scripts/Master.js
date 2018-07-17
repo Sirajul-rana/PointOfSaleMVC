@@ -1199,7 +1199,11 @@
             $("#Item_CostPrice").val("");
         }
     });
-
+    $('.purchaseEnter').keypress(function (e) {
+        if (e.which == 13) {
+            $('#addPurchaseItemButton').click();
+        }
+    });
 
     $("#savePurchaseForm").validate({
         rules: {
@@ -1279,7 +1283,7 @@
             var branchName = $("#BranchId option:selected").html();
             var supplierName = $("#PartyId option:selected").html();
             var employeeName = $("#EmployeeId option:selected").html();
-            
+
             $.post("/Operation/SaveStockIn/",
                 {
                     BranchId: branchId,
@@ -1376,7 +1380,7 @@
 
     }).datepicker("setDate", "0");
 
-    $("#Name").autocomplete({
+    $(".itemName").autocomplete({
         source: function (request, response) {
             $.post("/Operation/GetItems/",
                 {
@@ -1394,69 +1398,216 @@
                 });
         },
         select: function (e, i) {
-            $("#Price").val(i.item.sale);
+            $("#Item_ItemId").val(i.item.id);
+            $("#StockQuantity").val(i.item.stockQuantity);
+            $("#Item_SalePrice").val(i.item.sale);
         }
     });
+    //$("#addSalesForm").validate({
+    //    rules: {
+    //        ItemName: {
+    //            required: true
+    //        },
+    //        Quantity: {
+    //            required: true
+    //        },
+    //    },
+    //    messages: {
+    //        ItemName: {
+    //            required: "Please enter item name"
+    //        },
+    //        Quantity: {
+    //            required: "Please enter item quantity"
+    //        }
+    //    },
+    //    ignore: ".ignore"
+    //});
     var listOfItem = [];
 
     $("#addItemButton").click(function () {
-        var itemName = $("#Name").val();
-        var qty = $("#Quantity").val();
-        var price = $("#Price").val();
-        var anItem = {};
-        if (typeof listOfItem !== 'undefined' && listOfItem.length > 0) {
-            // the array is defined and has at least one element
-            var found = listOfItem.some(function (el) {
-                if (el.ItemName === itemName) {
-                    el.Quantity = parseInt(el.Quantity) + parseInt(qty);
-                    return true;
-                }
+        if ($("#addSalesForm").valid()) {
+            var itemName = $("#Item_ItemName").val();
+            var qty = $("#Item_Quantity").val();
+            var price = $("#Item_SalePrice").val();
+            var id = $('#Item_ItemId').val();
+            var anItem = {};
+            if (typeof listOfItem !== 'undefined' && listOfItem.length > 0) {
+                // the array is defined and has at least one element
+                var found = listOfItem.some(function (el) {
+                    if (el.ItemName === itemName) {
+                        el.Quantity = parseInt(el.Quantity) + parseInt(qty);
+                        return true;
+                    }
 
-            });
-            if (!found) {
+                });
+                if (!found) {
+                    anItem = {
+                        ItemName: itemName,
+                        Quantity: qty,
+                        Price: price,
+                        ItemId: id
+                    };
+                    listOfItem.push(anItem);
+                }
+            } else {
                 anItem = {
                     ItemName: itemName,
                     Quantity: qty,
-                    Price: price
+                    Price: price,
+                    ItemId: id
                 };
                 listOfItem.push(anItem);
             }
-        } else {
-            anItem = {
-                ItemName: itemName,
-                Quantity: qty,
-                Price: price
-            };
-            listOfItem.push(anItem);
+            //var anItem = {
+            //    ItemName: itemName,
+            //    Quantity: qty,
+            //    Price: price
+            //};
+            //listOfItem.push(anItem);
+
+            var tblHtml = "";
+            $.each(listOfItem, function (i, val) {
+                tblHtml += "<tr><td></td><td>" + val.ItemName + "</td>";
+                tblHtml += "<td>" + val.Quantity + "</td>";
+                tblHtml += "<td>" + val.Price + "</td>";
+                tblHtml += "<td>" + val.Quantity * parseFloat(val.Price).toFixed(2) + "</td>";
+                tblHtml += '<td><button type="button" id="btnEdit" class="btn btn-primary btnEdit"><i class="fa fa-edit"></i></button>';
+                tblHtml += '<button type="button" class="btn btn-danger btnDelete" id="btnDelete"><i class="fa fa-remove"></i></button></td></tr>';
+            });
+
+            $("#salesTableBody").html(tblHtml);
+            var sum = 0.00;
+            $.each(listOfItem, function (i, val) {
+                sum += (val.Quantity * parseFloat(val.Price).toFixed(2));
+            });
+
+            $("#total").text(sum);
+            $("#SalesTransaction_SubTotal").val(sum);
+            var subTotal = $("#SalesTransaction_SubTotal").val();
+            var vat = $("#SalesTransaction_Vat").val();
+            var discount = $("#SalesTransaction_Discount").val();
+            var discountAmount = subTotal * (discount / 100);
+            var vatAmount = (subTotal * (vat / 100));
+            var total = (subTotal - discountAmount) + vatAmount;
+            //alert("Vat/n" + "SubTotal: " + subTotal + "/n Vat: " + vat + "/n Discount: " + discount + "/n DiscountAmount: " +
+            //    discountAmount + "/n VatAmount: " + vatAmount + "/n Total: " + total);
+            $("#SalesTransaction_Total").val(total);
+            $("#Item_ItemName").val("");
+            $("#Item_Quantity").val("1");
+            $("#Item_SalePrice").val("");
+            $("#StockQuantity").val("");
         }
-        //var anItem = {
-        //    ItemName: itemName,
-        //    Quantity: qty,
-        //    Price: price
-        //};
-        //listOfItem.push(anItem);
+    });
+    function showSalesResult(customerName, customerContact, branchName, saleDate, employeeName) {
+        $("#Name").val(customerName);
+        $("#Contact").val(customerContact);
+        $("#Branch").val(branchName);
+        $("#Date").val(saleDate);
+        $("#SoldBy").val(employeeName);
+        $('#myModal').modal('show');
 
         var tblHtml = "";
         $.each(listOfItem, function (i, val) {
+
             tblHtml += "<tr><td></td><td>" + val.ItemName + "</td>";
             tblHtml += "<td>" + val.Quantity + "</td>";
-            tblHtml += "<td>" + val.Price + "</td>";
-            tblHtml += "<td>" + val.Quantity * parseFloat(val.Price).toFixed(2) + "</td>";
-            tblHtml += '<td><button type="button" id="btnEdit" class="btn btn-primary btnEdit"><i class="fa fa-edit"></i></button>';
-            tblHtml += '<button type="button" class="btn btn-danger btnDelete" id="btnDelete"><i class="fa fa-remove"></i></button></td></tr>';
+            tblHtml += "<td>" + val.Price + "</td></tr>";
         });
+        $("#salesResultTableBody").html(tblHtml);
+    };
+    $("#saveSalesButton").click(function () {
+        if ($("#saveSalesForm").valid()) {
+            var branchId = $("#BranchId").val();
+            var employeeId = $("#EmployeeId").val();
+            var saleDate = $("#SaleDate").val();
+            var subTotal = $("#SalesTransaction_SubTotal").val();
+            var vat = $("#SalesTransaction_Vat").val();
+            var discount = $("#SalesTransaction_Discount").val();
+            var total = $("#SalesTransaction_Total").val();
+            var paidAmount = $("#SalesTransaction_PaidAmount").val();
+            var returnAmount = $("#SalesTransaction_ReturnAmount").val();
 
-        $("#salesTableBody").html(tblHtml);
-        var sum = 0.00;
-        $.each(listOfItem, function (i, val) {
-            sum += (val.Quantity * parseFloat(val.Price).toFixed(2));
-        });
-        $("#total").text(sum);
-        $("#Name").val("");
-        $("#Quantity").val("");
-        $("#Price").val("");
+            var branchName = $("#BranchId option:selected").html();
+            var employeeName = $("#EmployeeId option:selected").html();
+            var customerName = $("#CustomerName").val();
+            var customerContact = $("#CustomerContact").val();
+
+
+            $.post("/Operation/SaveStockOut/",
+                {
+                    BranchId: branchId,
+                    EmployeeId: employeeId,
+                    SaleDate: saleDate,
+                    SalesTransaction: {
+                        SubTotal: subTotal,
+                        Vat: vat,
+                        Discount: discount,
+                        Total: total,
+                        PaidAmount: paidAmount,
+                        ReturnAmount: returnAmount
+                    },
+                    Items: listOfItem
+                },
+                function (data, status) {
+                    if (status === "success") {
+                        showSalesResult(customerName, customerContact, branchName, saleDate, employeeName);
+                        $("#BranchId").prop('selectedIndex', 0);
+                        $("#EmployeeId").prop('selectedIndex', 0);
+                        $("#SalesTransaction_SubTotal").val("0");
+                        $("#SalesTransaction_Vat").val("0");
+                        $("#SalesTransaction_Discount").val("0");
+                        $("#SalesTransaction_Total").val("0");
+                        $("#SalesTransaction_PaidAmount").val("0");
+                        $("#SalesTransaction_ReturnAmount").val("0");
+                        $("#CustomerName").val("");
+                        $("#CustomerContact").val("");
+                        $("#salesTableBody").empty();
+                        $("#total").text("0");
+                        listOfItem = [];
+
+                        alertify.success("Data: " + data + "\nStatus: " + status);
+                    } else {
+                        alertify.error("Data: " + data + "\nStatus: " + status);
+                    }
+
+                });
+        }
     });
 
+
+    $('#Item_ItemName,#Item_Quantity').keypress(function (e) {
+        if (e.which == 13) {
+            $('#addItemButton').click();
+        }
+    });
+
+    $('#SalesTransaction_Vat').keyup(function (e) {
+        var subTotal = $("#SalesTransaction_SubTotal").val();
+        var vat = $("#SalesTransaction_Vat").val();
+        var discount = $("#SalesTransaction_Discount").val();
+        var discountAmount = subTotal * (discount / 100);
+        var vatAmount = (subTotal * (vat / 100));
+        var total = (subTotal - discountAmount) + vatAmount;
+        $("#SalesTransaction_Total").val(total);
+
+    });
+
+    $('#SalesTransaction_Discount').keyup(function (e) {
+        var subTotal = $("#SalesTransaction_SubTotal").val();
+        var vat = $("#SalesTransaction_Vat").val();
+        var discount = $("#SalesTransaction_Discount").val();
+        var discountAmount = subTotal * (discount / 100);
+        var vatAmount = (subTotal * (vat / 100));
+        var total = (subTotal - discountAmount) + vatAmount;
+        $("#SalesTransaction_Total").val(total);
+    });
+
+    $('#SalesTransaction_PaidAmount').keyup(function (e) {
+        var total = $("#SalesTransaction_Total").val();
+        var paidAmount = $("#SalesTransaction_PaidAmount").val();
+        var returnAmount = paidAmount - total;
+        $('#SalesTransaction_ReturnAmount').val(returnAmount);
+    });
     $("#salesTable").on("click", ".btnDelete", function (e) {
         e.preventDefault();
         var selectedName = $(this).closest('tr').children('td:eq(1)').text();
@@ -1466,10 +1617,45 @@
                 listOfItem.splice($.inArray(selectedName, listOfItem), 1);
             }
         });
-
+        var sum = 0.00;
+        $.each(listOfItem, function (i, val) {
+            sum += (val.Quantity * parseFloat(val.Price).toFixed(2));
+        });
+        $("#total").text(sum);
+        $("#SalesTransaction_SubTotal").val(sum);
+        var subTotal = $("#SalesTransaction_SubTotal").val();
+        var vat = $("#SalesTransaction_Vat").val();
+        var discount = $("#SalesTransaction_Discount").val();
+        var discountAmount = subTotal * (discount / 100);
+        var vatAmount = (subTotal * (vat / 100));
+        var total = (subTotal - discountAmount) + vatAmount;
+        $("#SalesTransaction_Total").val(total);
         $(this).parents("tr").remove();
-        $("#total").text("");
     });
+
+    $("#deleteItemButton").click(function () {
+        $("#Item_ItemName").val("");
+        $("#Item_Quantity").val("");
+        $("#Item_SalePrice").val("");
+        $("#StockQuantity").val("");
+    });
+
+    $("#resetSalesButton").click(function () {
+        $("#BranchId").prop('selectedIndex', 0);
+        $("#EmployeeId").prop('selectedIndex', 0);
+        $("#SalesTransaction_SubTotal").val("0");
+        $("#SalesTransaction_Vat").val("0");
+        $("#SalesTransaction_Discount").val("0");
+        $("#SalesTransaction_Total").val("0");
+        $("#SalesTransaction_PaidAmount").val("0");
+        $("#SalesTransaction_ReturnAmount").val("0");
+        $("#CustomerName").val("");
+        $("#CustomerContact").val("");
+        $("#salesTableBody").empty();
+        $("#total").text("0");
+        listOfItem = [];
+    });
+    
     /*
      * Sale operation code ends here
      */

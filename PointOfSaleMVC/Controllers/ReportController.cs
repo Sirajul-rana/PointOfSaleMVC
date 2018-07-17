@@ -9,7 +9,8 @@ namespace PointOfSaleMVC.Controllers
     public class ReportController : Controller
     {
         // GET: Report
-        public ActionResult Index()
+        [HttpGet]
+        public ActionResult SalesReport()
         {
             return View();
         }

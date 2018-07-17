@@ -51,7 +51,12 @@ namespace PointOfSaleMVC.Controllers
             ViewBag.DropdownBranches = new SelectList(setupManager.GetBranches(), "BranchId", "BranchName", 0);
             return View();
         }
-
+        [HttpPost]
+        public ActionResult SaveStockOut(StockOut stockOut)
+        {
+            string msg = salesManager.SaveStockOut(stockOut);
+            return Json(msg, JsonRequestBehavior.AllowGet);
+        }
         [HttpPost]
         public JsonResult GetItems(string itemName)
         {
@@ -62,6 +67,7 @@ namespace PointOfSaleMVC.Controllers
                              value = item.ItemName,
                              sale = item.SalePrice.ToString(),
                              cost = item.CostPrice,
+                             stockQuantity = item.Quantity,
                              id = item.ItemId
                          }).ToList(); ;
             return Json(items, JsonRequestBehavior.AllowGet);

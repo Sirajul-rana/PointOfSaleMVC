@@ -10,6 +10,7 @@ namespace PointOfSaleMVC.Controllers
     {
         public ActionResult Index()
         {
+
             return View();
         }
 

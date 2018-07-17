@@ -2,7 +2,9 @@
     padding-top: 90px;
     position: relative;
 }
-
+.form-group {
+    margin-bottom: 0.2rem;
+}
 hr {
     border-color: white;
 }
