@@ -1,21 +1,21 @@
 ﻿
 @{
-    ViewBag.Title = "SalesReport";
+    ViewBag.Title = "PurchaseReport";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h3>Sales Report</h3>
+<h3>Purchase Report</h3>
 <hr class="my-4" />
 <div class="form-horizontal">
-    <div class="row" style="margin-left: 0px;margin-right: 0px">
+    <div class="row">
         <div class="col-md">
             <div class="form-group">
                 <div class="row">
                     <div class="col-md-5">
-                        @Html.Label("Sales Code", htmlAttributes: new { @class = "control-label" })
+                        @Html.Label("Purchase Code", htmlAttributes: new { @class = "control-label" })
                     </div>
                     <div class="col-md-7">
-                        @Html.TextBox("SalesCode", null, new { @class = "form-control" })
+                        @Html.TextBox("PurchaseCode", null, new { @class = "form-control" })
                     </div>
                 </div>
             </div>
@@ -25,7 +25,7 @@
                         @Html.Label("From Date", htmlAttributes: new { @class = "control-label" })
                     </div>
                     <div class="col-md-7">
-                        @Html.TextBox("FromDate", null, new { @class = "form-control" })
+                        @Html.TextBox("PurchaseFromDate", null, new { @class = "form-control" })
                     </div>
                 </div>
             </div>
@@ -37,7 +37,7 @@
                         @Html.Label("Branch", htmlAttributes: new { @class = "control-label" })
                     </div>
                     <div class="col-md-7">
-                        @Html.DropDownList("BranchId", new SelectList(Enumerable.Empty<SelectListItem>(), "BranchId", "BranchName"), "Select Branch", new { @class = "form-control" })
+                        @Html.DropDownList("BranchId", (SelectList)ViewBag.DropdownBranches, "Select Branch", new { @class = "form-control" })
                     </div>
                 </div>
             </div>
@@ -47,14 +47,14 @@
                         @Html.Label("To Date", htmlAttributes: new { @class = "control-label" })
                     </div>
                     <div class="col-md-7">
-                        @Html.TextBox("ToDate", null, new { @class = "form-control" })
+                        @Html.TextBox("PurchaseToDate", null, new { @class = "form-control" })
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-success">Show</button>
+        <button type="button" class="btn btn-success" id="showPurchaseReport">Show</button>
     </div>
     <h4>Report</h4>
     <hr class="my-4" />
@@ -69,8 +69,8 @@
                         @Html.DisplayName("Date")
                     </th>
                     @*<th>
-                            @Html.DisplayName("Code")
-                        </th>*@
+            @Html.DisplayName("Code")
+        </th>*@
                     <th>
                         @Html.DisplayName("Description")
                     </th>
@@ -78,10 +78,13 @@
                         @Html.DisplayName("Branch")
                     </th>
                     <th>
-                        @Html.DisplayName("Customer")
+                        @Html.DisplayName("Supplier")
                     </th>
                     <th>
-                        @Html.DisplayName("Total")
+                        @Html.DisplayName("Purchase Total")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Action")
                     </th>
                 </tr>
                 <tbody id="purchaseResultTableBody"></tbody>
@@ -93,3 +96,4 @@
         <button type="button" class="btn btn-danger" id="closePurchaseResult" data-dismiss="modal">Clear</button>
     </div>
 </div>
+

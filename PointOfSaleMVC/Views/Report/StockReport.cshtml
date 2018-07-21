@@ -1,0 +1,56 @@
+﻿@model PointOfSaleMVC.Models.StockIn
+@{
+    ViewBag.Title = "StockReport";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Stock Report</h2>
+<div class="form-horizontal">
+    <div class="row">
+        <div class="col-md"></div>
+        <div class="col-md">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-3">
+                        @Html.LabelFor(model=>model.BranchId, htmlAttributes: new { @class = "control-label" })
+                    </div>
+                    <div class="col-md-9">
+                        @Html.DropDownListFor(model => model.BranchId, (SelectList)ViewBag.DropdownBranches, "Select Branch", new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md"></div>
+    </div>
+    <h4>Report</h4>
+    <hr class="my-4" />
+    <div class="row">
+        <div class="col-md">
+            <table class="table table-bordered table-hover table-responsive-md table-striped table-light css-serial" id="purchaseResultTable" style="border: none">
+                <tr class="thead-dark">
+                    <th>
+                        SL
+                    </th>
+                    <th>
+                        @Html.DisplayName("Item Name")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Category Full Path")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Stock Quantity")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Price")
+                    </th>
+                </tr>
+                <tbody id="stockReportTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" id="printStockReportButton">Print</button>
+        <button type="button" class="btn btn-danger" id="clearStockTable">Clear</button>
+    </div>
+</div>
+

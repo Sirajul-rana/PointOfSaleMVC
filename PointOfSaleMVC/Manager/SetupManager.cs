@@ -78,6 +78,10 @@ namespace PointOfSaleMVC.Manager
 
             return noOfZero + countDeptStd;
         }
+        public int GetTotalItems()
+        {
+            return setupGateway.GetTotalItems();
+        }
         /*
          * Item setup code ends here
          */
@@ -170,6 +174,12 @@ namespace PointOfSaleMVC.Manager
 
             return noOfZero + countDeptStd;
         }
+
+        public Branch GetBranch(int stockInBranchId)
+        {
+            Branch branch = setupGateway.GetBranch(stockInBranchId);
+            return branch;
+        }
         /*
          * Outlet/ Branch setup code ends here
          */
@@ -223,9 +233,15 @@ namespace PointOfSaleMVC.Manager
         {
             return setupGateway.GetAllEmployees();
         }
+        public int GetTotalEmployees()
+        {
+            return setupGateway.GetTotalEmployees();
+        }
         /*
          * Employee setup code ends here
          */
-        
+
+
+
     }
 }

@@ -48,6 +48,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="itextsharp, Version=5.5.13.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\iTextSharp.5.5.13\lib\itextsharp.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -156,12 +159,14 @@
     <Compile Include="Controllers\SetupController.cs" />
     <Compile Include="DBL\Gateway.cs" />
     <Compile Include="DBL\PurchaseGateway.cs" />
+    <Compile Include="DBL\ReportGateway.cs" />
     <Compile Include="DBL\SalesGateway.cs" />
     <Compile Include="DBL\SetupGateway.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Manager\PurchaseManager.cs" />
+    <Compile Include="Manager\ReportManager.cs" />
     <Compile Include="Manager\SalesManager.cs" />
     <Compile Include="Manager\SetupManager.cs" />
     <Compile Include="Models\Branch.cs" />
@@ -339,6 +344,10 @@
     <Content Include="Views\Operation\SalesOperation.cshtml" />
     <Content Include="Views\Operation\PurchaseOperation.cshtml" />
     <Content Include="Views\Report\SalesReport.cshtml" />
+    <Content Include="Views\Report\PurchaseReport.cshtml" />
+    <Content Include="Views\Report\ExpenseReport.cshtml" />
+    <Content Include="Views\Report\StockReport.cshtml" />
+    <Content Include="Views\Report\IncomeReport.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

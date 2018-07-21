@@ -110,5 +110,24 @@ namespace PointOfSaleMVC.DBL
             gateway.Connection.Close();
             return quantity;
         }
+
+        public int GetTotalSales()
+        {
+            string query = "SELECT SUM(So.StockQuantity) TotalSales FROM StockOut So";
+            Gateway gateway = new Gateway(query);
+            gateway.SqlCommand.Parameters.Clear();
+
+            SqlDataReader reader = gateway.SqlCommand.ExecuteReader();
+            int totalSales = 0;
+            if (reader.HasRows)
+            {
+                reader.Read();
+                totalSales = (int) reader["TotalSales"];
+            }
+
+            reader.Close();
+            gateway.Connection.Close();
+            return totalSales;
+        }
     }
 }

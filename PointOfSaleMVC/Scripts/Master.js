@@ -1655,8 +1655,113 @@
         $("#total").text("0");
         listOfItem = [];
     });
-    
+
     /*
      * Sale operation code ends here
+     */
+
+    /*
+     * Purchase report code starts here
+     */
+    $("#PurchaseFromDate").datepicker({
+        changeMonth: true,
+        changeYear: true,
+        dateFormat: "yy-mm-dd"
+
+    });
+
+    $("#PurchaseToDate").datepicker({
+        changeMonth: true,
+        changeYear: true,
+        dateFormat: "yy-mm-dd"
+
+    });
+
+    $("#showPurchaseReport").click(function() {
+        
+    });
+    /*
+     * Purchase report code ends here
+     */
+
+
+    /*
+     * Sale report code starts here
+     */
+    $("#FromDate").datepicker({
+        changeMonth: true,
+        changeYear: true,
+        dateFormat: "yy-mm-dd"
+
+    });
+
+    $("#ToDate").datepicker({
+        changeMonth: true,
+        changeYear: true,
+        dateFormat: "yy-mm-dd"
+
+    });
+
+    /*
+     * Sale report code ends here
+     */
+
+    /*
+     * Stock report code starts here
+     */
+    $("#BranchId").change(function () {
+        var branchId = $("#BranchId").val();
+        if (branchId === "") {
+            $("#stockReportTableBody").empty();
+        } else {
+            $.post("/Report/GetStocksByBranchId/",
+                {
+                    BranchId: branchId
+                },
+                function (data, status) {
+                    if (status === "success") {
+                        var tblHtml = "";
+                        $.each(data, function (i, val) {
+
+                            tblHtml += "<tr><td></td><td>" + val.Item.ItemName + "</td>";
+                            tblHtml += "<td>" + val.Item.Category.RootCategory.CategoryName + ">" + val.Item.Category.CategoryName + ">" + val.Item.ItemName + "</td>";
+                            tblHtml += "<td>" + val.Item.Quantity + "</td>";
+                            tblHtml += "<td>" + val.Item.SalePrice + "</td></tr>";
+                        });
+                        $("#stockReportTableBody").html(tblHtml);
+
+                    } else {
+                        alertify.error("Data: " + data + "\nStatus: " + status);
+                    }
+
+                });
+        }
+    });
+
+    $("#printStockReportButton").click(function () {
+        var branchId = $("#BranchId").val();
+        if (branchId === "") {
+            alertify.error("Select a branch");
+        } else {
+            $.post("/Report/StockReport/",
+                {
+                    BranchId: branchId
+                },
+                function (data, status) {
+                    alertify.set('notifier', 'position', 'top-right');
+                    alertify.message("Download will start soon...");
+                    $("#stockReportTableBody").empty();
+                    $("#BranchId").prop('selectedIndex', 0);
+                });
+        }
+    });
+
+    $("#clearStockTable").click(function () {
+        $("#BranchId").prop('selectedIndex', 0);
+        $("#stockReportTableBody").empty();
+    });
+
+    /*
+     * Stock report code ends here
      */
 });

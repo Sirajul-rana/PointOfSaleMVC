@@ -1,21 +1,21 @@
 ﻿
 @{
-    ViewBag.Title = "SalesReport";
+    ViewBag.Title = "ExpenseReport";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h3>Sales Report</h3>
+<h2>Expense Report</h2>
 <hr class="my-4" />
 <div class="form-horizontal">
-    <div class="row" style="margin-left: 0px;margin-right: 0px">
+    <div class="row">
         <div class="col-md">
             <div class="form-group">
                 <div class="row">
                     <div class="col-md-5">
-                        @Html.Label("Sales Code", htmlAttributes: new { @class = "control-label" })
+                        @Html.Label("Expense Code", htmlAttributes: new { @class = "control-label" })
                     </div>
                     <div class="col-md-7">
-                        @Html.TextBox("SalesCode", null, new { @class = "form-control" })
+                        @Html.TextBox("ExpenseCode", null, new { @class = "form-control" })
                     </div>
                 </div>
             </div>
@@ -78,10 +78,7 @@
                         @Html.DisplayName("Branch")
                     </th>
                     <th>
-                        @Html.DisplayName("Customer")
-                    </th>
-                    <th>
-                        @Html.DisplayName("Total")
+                        @Html.DisplayName("Total Expense")
                     </th>
                 </tr>
                 <tbody id="purchaseResultTableBody"></tbody>
@@ -93,3 +90,4 @@
         <button type="button" class="btn btn-danger" id="closePurchaseResult" data-dismiss="modal">Clear</button>
     </div>
 </div>
+

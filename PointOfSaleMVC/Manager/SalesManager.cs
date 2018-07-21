@@ -26,5 +26,10 @@ namespace PointOfSaleMVC.Manager
                 return "Stock out failed";
             }
         }
+
+        public int GetTotalSales()
+        {
+            return salesGateway.GetTotalSales();
+        }
     }
 }

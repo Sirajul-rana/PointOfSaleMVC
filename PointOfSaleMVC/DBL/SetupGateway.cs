@@ -171,13 +171,34 @@ namespace PointOfSaleMVC.DBL
             if (reader.HasRows)
             {
                 reader.Read();
-                itemCount = (int) reader["ItemCount"];
+                itemCount = (int)reader["ItemCount"];
             }
-            
+
 
             reader.Close();
             gateway.Connection.Close();
             return itemCount;
+        }
+
+        public int GetTotalItems()
+        {
+            int totalItems = 0;
+
+            string query = "SELECT SUM(Quantity) TotalItems FROM StockIn Si";
+            Gateway gateway = new Gateway(query);
+            gateway.SqlCommand.Parameters.Clear();
+
+            SqlDataReader reader = gateway.SqlCommand.ExecuteReader();
+            if (reader.HasRows)
+            {
+                reader.Read();
+                totalItems = (int)reader["TotalItems"];
+            }
+
+            reader.Close();
+            gateway.Connection.Close();
+
+            return totalItems;
         }
         /*
          * Item setup code ends here
@@ -385,6 +406,27 @@ namespace PointOfSaleMVC.DBL
             gateway.Connection.Close();
             return itemCount;
         }
+        public Branch GetBranch(int stockInBranchId)
+        {
+            string query = "SELECT * FROM Branch WHERE BranchId = @branchId";
+            Gateway gateway = new Gateway(query);
+            gateway.SqlCommand.Parameters.Clear();
+            gateway.SqlCommand.Parameters.AddWithValue("@branchId", stockInBranchId);
+
+            SqlDataReader reader = gateway.SqlCommand.ExecuteReader();
+            Branch branch = new Branch();
+            if (reader.HasRows)
+            {
+                reader.Read();
+                branch.BranchName = reader["BranchName"].ToString();
+                branch.BranchAddress = reader["BranchAddress"].ToString();
+                branch.BranchContactNo = reader["BranchContactNo"].ToString();
+            }
+
+            reader.Close();
+            gateway.Connection.Close();
+            return branch;
+        }
         /*
          * Outlet/ Branch setup code ends here
          */
@@ -526,7 +568,7 @@ namespace PointOfSaleMVC.DBL
             while (reader.Read())
             {
                 Employee employee = new Employee();
-                employee.EmployeeId = (int) reader["EmployeeId"];
+                employee.EmployeeId = (int)reader["EmployeeId"];
                 employee.EmployeeName = reader["EmployeeName"].ToString();
                 employee.EmployeeFatherName = reader["EmployeeFatherName"].ToString();
                 employee.EmployeeMotherName = reader["EmployeeMotherName"].ToString();
@@ -550,11 +592,29 @@ namespace PointOfSaleMVC.DBL
             gateway.Connection.Close();
             return employees;
         }
+        public int GetTotalEmployees()
+        {
+            string query = "SELECT COUNT(Em.EmployeeId) TotalEmployees FROM Employee Em";
+            Gateway gateway = new Gateway(query);
+            gateway.SqlCommand.Parameters.Clear();
+
+            SqlDataReader reader = gateway.SqlCommand.ExecuteReader();
+            int totalEmployees = 0;
+            if (reader.HasRows)
+            {
+                reader.Read();
+                totalEmployees = (int)reader["TotalEmployees"];
+            }
+
+            reader.Close();
+            gateway.Connection.Close();
+            return totalEmployees;
+        }
         /*
          * Employee setup code ends here
          */
 
 
-        
+
     }
 }
