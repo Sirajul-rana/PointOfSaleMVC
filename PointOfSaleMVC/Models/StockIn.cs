@@ -11,6 +11,7 @@ namespace PointOfSaleMVC.Models
     {
         [Key] public int StockInId { get; set; }
 
+        public int ItemId { get; set; }
         [Required(ErrorMessage = "Please select an option")]
         [DisplayName("Branch")]
         public int BranchId { get; set; }
@@ -24,9 +25,11 @@ namespace PointOfSaleMVC.Models
         public int EmployeeId { get; set; }
 
         [Required(ErrorMessage = "Please select a date")]
+        [DataType(DataType.Date)]
         [DisplayName("Date")]
         public DateTime PurchaseDateTime { get; set; }
 
+        public decimal PurchaseTotal { get; set; }
         public PurchaseTransaction PurchaseTransaction { get; set; }
         public Branch Branch { get; set; }
         public Party Party { get; set; }

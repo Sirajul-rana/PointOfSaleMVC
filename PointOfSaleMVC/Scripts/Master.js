@@ -6,6 +6,13 @@
         $(sel).toggleClass('in');
         $(sel2).toggleClass('out');
     });
+    /*
+     * Login code starts here
+     */
+      
+     /*
+     * Login code ends here
+     */
 
     /*
      * Category Setup page code start here
@@ -209,7 +216,7 @@
             $.each(data, function (i, val) {
                 tblHtml += "<tr><td></td><td>" + val.Category.CategoryName + "</td>";
                 tblHtml += "<td>" + val.ItemName + "</td>";
-                tblHtml += "<td>" + val.Category.CategoryCode + "-" + val.ItemCode + "</td>";
+                tblHtml += "<td>" + val.ItemCode + "</td>";
                 tblHtml += "<td>" + val.ItemDescription + "</td>";
                 tblHtml += "<td>" + val.CostPrice + " tk</td>";
                 tblHtml += "<td>" + val.SalePrice + " tk</td>";
@@ -327,6 +334,7 @@
                         $("#CategoryId").prop('selectedIndex', 0);
                         $("#ItemName").val("");
                         $("#ItemCode").val("");
+                        $("#CategoryCode").val("");
                         $("#ItemDescription").val("");
                         $("#CostPrice").val("");
                         $("#SalePrice").val("");
@@ -587,8 +595,10 @@
     $("#OrganizationId").change(function () {
         if ($("#OrganizationId").val() === "") {
             $("#OrganizationCode").val("");
+            $("#BranchCode").val("");
         } else {
             var organizationId = $("#OrganizationId").val();
+            var code = ($("#OrganizationId option:selected").html()).slice(0, 3);
             $.post("/Setup/GetOrganizationCode/",
                 {
                     OrganizationId: organizationId
@@ -596,6 +606,7 @@
                 function (data, status) {
                     if (status === "success") {
                         $("#BranchCode").val(data);
+                        $("#OrganizationCode").val(code.toLocaleUpperCase());
                     } else {
                         loadCategoryTable();
                         alertify.error("Data: " + data + "\nStatus: " + status);
@@ -650,7 +661,7 @@
             $.each(data, function (i, val) {
                 tblHtml += "<tr><td></td><td>" + val.Organization.OrganizationName + "</td>";
                 tblHtml += "<td>" + val.BranchName + "</td>";
-                tblHtml += "<td>" + val.Organization.OrganizationCode + "-" + val.BranchCode + "</td>";
+                tblHtml += "<td>" + val.BranchCode + "</td>";
                 tblHtml += "<td>" + val.BranchContactNo + "</td>";
                 tblHtml += "<td>" + val.BranchAddress + "</td>";
                 tblHtml += '<td><button type="button" id="btnEdit" class="btn btn-primary btnEdit"><i class="fa fa-edit"></i></button>';
@@ -681,6 +692,7 @@
                         $("#OrganizationId").prop('selectedIndex', 0);
                         $("#BranchName").val("");
                         $("#BranchCode").val("");
+                        $("#OrganizationCode").val("");
                         $("#BranchContactNo").val("");
                         $("#BranchAddress").val("");
                         alertify.success("Data: " + data + "\nStatus: " + status);
@@ -700,6 +712,7 @@
         $("#BranchCode").val("");
         $("#BranchContactNo").val("");
         $("#BranchAddress").val("");
+        $("#OrganizationCode").val("");
         alertify.error("All Cleared");
     });
     /*
@@ -1677,8 +1690,59 @@
 
     });
 
-    $("#showPurchaseReport").click(function() {
-        
+    $("#showPurchaseReport").click(function () {
+        if ($("#BranchId").val() !== "") {
+            var branchId = $("#BranchId").val();
+            $.post("/Report/GetPurchaseByBranchId/",
+                {
+                    BranchId: branchId
+                },
+                function (data, status) {
+                    if (status === "success") {
+                        var tblHtml = "";
+                        var total = 0.0;
+                        $.each(data, function (i, val) {
+                            var milli = val.PurchaseDateTime.replace(/\/Date\((-?\d+)\)\//, '$1');
+                            var date = new Date(parseInt(milli));
+                            var formattedDate = date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
+                            tblHtml += "<tr><td></td><td>" + date.toLocaleDateString() + "</td>";
+                            tblHtml += "<td>" + val.Item.ItemName + ">" + val.Item.Quantity + ">" + val.Item.CostPrice+" tk" + "</td>";
+                            tblHtml += "<td>" + val.Branch.BranchName + "</td>";
+                            tblHtml += "<td>" + val.Party.PartyName + "</td>";
+                            tblHtml += "<td>" + val.PurchaseTotal+" tk" + "</td>";
+                            tblHtml += '<td><button type="button" id="btnEdit" class="btn btn-primary btnEdit"><i class="fa fa-edit"></i></button>';
+                            tblHtml += '<button type="button" class="btn btn-danger btnDelete" id="btnDelete" style="margin-left: 5px;"><i class="fa fa-remove"></i></button></td></tr>';
+                            total += val.PurchaseTotal;
+                        });
+                        $("#purchaseResultTableBody").html(tblHtml);
+                        $("#totalPurchaseCost").val(total+" tk");
+
+
+                    } else {
+                        alertify.error("Data: " + data + "\nStatus: " + status);
+                    }
+
+                });
+        }
+    });
+
+    $("#printPurchaseReportButton").click(function () {
+        var branchId = $("#BranchId").val();
+        if (branchId === "") {
+            alertify.error("Select a branch");
+        } else {
+            $.post("/Report/PurchaseReport/",
+                {
+                    BranchId: branchId
+                },
+                function (data, status) {
+                    alertify.set('notifier', 'position', 'top-right');
+                    alertify.message("Download will start soon...");
+                    $("#purchaseResultTableBody").empty();
+                    $("#totalPurchaseCost").val("");
+                    $("#BranchId").prop('selectedIndex', 0);
+                });
+        }
     });
     /*
      * Purchase report code ends here
@@ -1726,7 +1790,7 @@
                             tblHtml += "<tr><td></td><td>" + val.Item.ItemName + "</td>";
                             tblHtml += "<td>" + val.Item.Category.RootCategory.CategoryName + ">" + val.Item.Category.CategoryName + ">" + val.Item.ItemName + "</td>";
                             tblHtml += "<td>" + val.Item.Quantity + "</td>";
-                            tblHtml += "<td>" + val.Item.SalePrice + "</td></tr>";
+                            tblHtml += "<td>" + val.Item.SalePrice+" tk" + "</td></tr>";
                         });
                         $("#stockReportTableBody").html(tblHtml);
 

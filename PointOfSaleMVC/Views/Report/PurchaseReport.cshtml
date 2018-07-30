@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "PurchaseReport";
+    ViewBag.Title = "Purchase Report";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -88,11 +88,26 @@
                     </th>
                 </tr>
                 <tbody id="purchaseResultTableBody"></tbody>
+                <tfoot>
+                <tr>
+                    <td id="removeSerial" style="border: none"></td>
+                    <td style="border: none"></td>
+                    <td style="border: none"></td>
+                    <td style="border: none"></td>
+                    <td style="border: none">
+                        @Html.Label("Total", htmlAttributes: new {@class = "control-label"})
+                    </td>
+                    <td id="total" style="border: none">
+                        @Html.TextBox("totalPurchaseCost", null, new {@class = "form-control", @readonly = "readonly"})
+                    </td>
+                </tr>
+                </tfoot>
             </table>
         </div>
     </div>
+    
     <div class="modal-footer">
-        <button type="button" class="btn btn-success">Print</button>
+        <button type="button" id="printPurchaseReportButton" class="btn btn-success">Print</button>
         <button type="button" class="btn btn-danger" id="closePurchaseResult" data-dismiss="modal">Clear</button>
     </div>
 </div>

@@ -103,6 +103,25 @@ namespace PointOfSaleMVC.DBL
             gateway.Connection.Close();
             return categories;
         }
+        private string GetCategoryCode(int itemCategoryId)
+        {
+            string code = "";
+            string query = "SELECT CategoryCode FROM Category WHERE CategoryId = @categoryId";
+            Gateway gateway = new Gateway(query);
+            gateway.SqlCommand.Parameters.Clear();
+            gateway.SqlCommand.Parameters.AddWithValue("@categoryId", itemCategoryId);
+
+            SqlDataReader reader = gateway.SqlCommand.ExecuteReader();
+            if (reader.HasRows)
+            {
+                reader.Read();
+                code = reader["CategoryCode"].ToString();
+            }
+
+            reader.Close();
+            gateway.Connection.Close();
+            return code;
+        }
         /*
          * Category setup code ends here
          */
@@ -117,7 +136,7 @@ namespace PointOfSaleMVC.DBL
             Gateway gateway = new Gateway(query);
             gateway.SqlCommand.Parameters.Clear();
             gateway.SqlCommand.Parameters.AddWithValue("@itemName", item.ItemName);
-            gateway.SqlCommand.Parameters.AddWithValue("@itemCode", item.ItemCode);
+            gateway.SqlCommand.Parameters.AddWithValue("@itemCode", GetCategoryCode(item.CategoryId)+"-"+item.ItemCode);
             gateway.SqlCommand.Parameters.AddWithValue("@itemDescription", item.ItemDescription);
             gateway.SqlCommand.Parameters.AddWithValue("@costPrice", item.CostPrice);
             gateway.SqlCommand.Parameters.AddWithValue("@salePrice", item.SalePrice);
@@ -128,6 +147,8 @@ namespace PointOfSaleMVC.DBL
             gateway.Connection.Close();
             return rowAffected;
         }
+
+        
 
         public List<Item> GetAllItems()
         {
@@ -148,7 +169,6 @@ namespace PointOfSaleMVC.DBL
                 item.SalePrice = (decimal)reader["SalePrice"];
                 Category category = new Category();
                 category.CategoryName = reader["CategoryName"].ToString();
-                category.CategoryCode = reader["CategoryCode"].ToString();
                 item.Category = category;
                 items.Add(item);
             }
@@ -314,6 +334,25 @@ namespace PointOfSaleMVC.DBL
             gateway.Connection.Close();
             return organizations;
         }
+        private string GetOrganicationCode(int branchOrganizationId)
+        {
+            string code = "";
+            string query = "SELECT OrganizationCode FROM Organization WHERE OrganizationId = @branchOrganizationId";
+            Gateway gateway = new Gateway(query);
+            gateway.SqlCommand.Parameters.Clear();
+            gateway.SqlCommand.Parameters.AddWithValue("@branchOrganizationId", branchOrganizationId);
+
+            SqlDataReader reader = gateway.SqlCommand.ExecuteReader();
+            if (reader.HasRows)
+            {
+                reader.Read();
+                code = reader["OrganizationCode"].ToString();
+            }
+
+            reader.Close();
+            gateway.Connection.Close();
+            return code;
+        }
         /*
          * Organization setup code ends here
          */
@@ -355,7 +394,7 @@ namespace PointOfSaleMVC.DBL
             Gateway gateway = new Gateway(query);
             gateway.SqlCommand.Parameters.Clear();
             gateway.SqlCommand.Parameters.AddWithValue("@branchName", branch.BranchName);
-            gateway.SqlCommand.Parameters.AddWithValue("@branchCode", branch.BranchCode);
+            gateway.SqlCommand.Parameters.AddWithValue("@branchCode",GetOrganicationCode(branch.OrganizationId)+"-"+ branch.BranchCode);
             gateway.SqlCommand.Parameters.AddWithValue("@branchContactNo", branch.BranchContactNo);
             gateway.SqlCommand.Parameters.AddWithValue("@branchAddress", branch.BranchAddress);
             gateway.SqlCommand.Parameters.AddWithValue("@organizationId", branch.OrganizationId);
@@ -365,6 +404,9 @@ namespace PointOfSaleMVC.DBL
             gateway.Connection.Close();
             return rowAffected;
         }
+
+        
+
         public List<Branch> GetBranches()
         {
             List<Branch> branches = new List<Branch>();

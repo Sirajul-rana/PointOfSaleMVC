@@ -1,0 +1,34 @@
+﻿@model PointOfSaleMVC.Models.UserLogin
+
+@{
+    ViewBag.Title = "LoginPage";
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+}
+
+<h1 class="form-heading">StoreMs</h1>
+<div class="login-form">
+    <div class="main-div">
+        <div class="panel">
+            <h2>Login</h2>
+            <p>Please enter your email and password</p>
+        </div>
+        <form id="Login">
+
+            <div class="form-group">
+
+                @Html.TextBoxFor(model=>model.Employee.EmployeeUsername, new {@class= "form-control", placeholder= "Email Address" })
+                @*<input type="email" class="form-control" id="inputEmail" placeholder="Email Address">*@
+
+            </div>
+
+            <div class="form-group">
+                @Html.PasswordFor(model => model.Employee.EmployeePassword, new { @class = "form-control", placeholder= "Password" })
+                @*<input type="password" class="form-control" id="inputPassword" placeholder="Password">*@
+            </div>
+            <button type="submit" class="btn btn-primary">Login</button>
+
+        </form>
+    </div>
+    <p class="botto-text"> Designed by Md. Sirajul Islam</p>
+</div>
+

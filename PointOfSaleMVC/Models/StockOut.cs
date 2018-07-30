@@ -29,5 +29,6 @@ namespace PointOfSaleMVC.Models
         public Item Item { get; set; }
         public List<Item> Items { get; set; }
         public SalesTransaction SalesTransaction { get; set; }
+        
     }
 }

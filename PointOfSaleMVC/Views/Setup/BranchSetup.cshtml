@@ -2,7 +2,7 @@
 @model PointOfSaleMVC.Models.Branch
 
 @{
-    ViewBag.Title = "BranchSetup";
+    ViewBag.Title = "Branch Setup";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -34,15 +34,16 @@
                 </div>
 
                 <div class="form-group">
-                    @Html.LabelFor(model => model.BranchCode, htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.LabelFor(model => model.BranchCode, htmlAttributes: new { @class = "control-label col-md-4" })
                     <div class="col-md-10">
-                        @Html.EditorFor(model => model.BranchCode, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.TextBox("OrganizationCode", null, new { @class = "form-control", style = "float:left;width:  60px;", @readonly = "readonly" })
+                        @Html.EditorFor(model => model.BranchCode, new { htmlAttributes = new { @class = "form-control col-md-8", style = "float:left;margin-left: 5px;" } })
                         @Html.ValidationMessageFor(model => model.BranchCode, "", new { @class = "text-danger" })
                     </div>
                 </div>
 
                 <div class="form-group">
-                    @Html.LabelFor(model => model.BranchContactNo, htmlAttributes: new { @class = "control-label col-md-2" })
+                    @Html.LabelFor(model => model.BranchContactNo, htmlAttributes: new { @class = "control-label col-md-5" })
                     <div class="col-md-10">
                         @Html.EditorFor(model => model.BranchContactNo, new { htmlAttributes = new { @class = "form-control" } })
                         @Html.ValidationMessageFor(model => model.BranchContactNo, "", new { @class = "text-danger" })
@@ -52,7 +53,7 @@
                 <div class="form-group">
                     @Html.LabelFor(model => model.BranchAddress, htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        @Html.TextAreaFor(model => model.BranchAddress, new { @class = "form-control" } )
+                        @Html.TextAreaFor(model => model.BranchAddress, new { @class = "form-control" })
                         @Html.ValidationMessageFor(model => model.BranchAddress, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -65,10 +66,10 @@
             </div>
             <div class="col-md"></div>
         </div>
-        
+
     </div>
 }
-
+<br/>
 <table class="table table-bordered table-hover table-responsive-md table-striped table-light css-serial">
     <tr class="thead-dark">
         <th>
@@ -106,7 +107,7 @@
                     @Html.DisplayFor(modelItem => item.BranchName)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Organization.OrganizationCode)-@Html.DisplayFor(modelItem => item.BranchCode)
+                    @Html.DisplayFor(modelItem => item.BranchCode)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.BranchContactNo)
